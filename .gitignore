@@ -1,0 +1,21 @@
+# prostředí
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+# data: TORGO se necommituje (jen se uvádí jako zdroj), ani nahrávky z aplikace
+data/
+outputs/examples/*.wav
+*.wav
+*.npz
+*.npy
+*.pt
+*.zip
+hf_cache/
+.cache/
+
+# odložené soubory
+_unsorted/
+
+# interní pracovní pokyny
+CLAUDE.md

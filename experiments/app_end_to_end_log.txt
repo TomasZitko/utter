@@ -1,0 +1,18 @@
+F01: only 0 words with 4+ recordings, skipped
+F03: top-1 75% | accepted 44%, of those correct 92% | n=57
+F04: top-1 90% | accepted 85%, of those correct 94% | n=60
+M01: only 1 words with 4+ recordings, skipped
+M02: only 3 words with 4+ recordings, skipped
+M03: only 1 words with 4+ recordings, skipped
+M04: top-1 58% | accepted 24%, of those correct 68% | n=78
+M05: top-1 86% | accepted 64%, of those correct 97% | n=50
+
+Per person (averaged over recordings):
+          top1  accepted   n  wrong_actions
+speaker                                    
+F03      0.754     0.439  57          0.035
+F04      0.900     0.850  60          0.050
+M04      0.577     0.244  78          0.077
+M05      0.860     0.640  50          0.020
+
+Mean over 4 people: top-1 77.3%, accepted 54.3%, wrong actions 4.6%. Chance = 20%.

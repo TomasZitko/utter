@@ -1,0 +1,32 @@
+/* Design tokens: všechny barvy, fonty a rozměry na jednom místě (podle design/Utter App.dc.html). */
+:root {
+  --font-display: "Familjen Grotesk", system-ui, sans-serif;
+  --font-body: "Instrument Sans", system-ui, sans-serif;
+
+  --page: #0E0D0C;           /* pozadí kolem telefonu */
+  --bg: #181716;             /* pozadí aplikace */
+  --surface: #232220;
+  --surface-hover: #2b2a27;
+  --text: #F3EBDD;
+  --muted: #B5AC9E;
+  --ink: #141414;            /* text na barevných plochách */
+  --line: rgba(243, 235, 221, .18);
+  --line-mid: rgba(243, 235, 221, .28);
+  --line-strong: rgba(243, 235, 221, .32);
+  --accent: #FFC93C;         /* hlavní akce */
+  --pink: #F8A4D2;
+  --danger: #F4583E;         /* Help, nahrávání */
+  --ok: #8FD9B0;
+
+  --hero-h: 372px;
+  --nav-h: 92px;
+  --gutter: 24px;
+  --btn-xl: 72px;            /* hlavní tlačítka */
+  --btn-l: 60px;
+  --btn-m: 52px;
+  --target-min: 56px;
+  --radius-card: 28px;
+  --radius-tile: 22px;
+  --phone-w: 390px;
+  --phone-h: 844px;
+}
