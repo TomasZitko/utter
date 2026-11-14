@@ -57,11 +57,11 @@ Our own measurement (Whisper on TORGO single words: 42% correct for people with 
 5. General University Hospital in Prague (VFN), press release *100 let neurologie* (15 Apr 2026, in Czech). https://www.vfn.cz/wp-content/uploads/2026/04/TZ_neurologie_100_let_15_4_2026.pdf
 6. VFN Prague, press release *Poruchy mozku a řeči na vzestupu* (21 Nov 2023, in Czech). https://www.vfn.cz/wp-content/uploads/2023/11/TZ-Poruchy-mozku-a-řeči-na-vzestupu_21_11_2023.pdf
 7. De Russis, L., Corno, F. *On the impact of dysarthric speech on contemporary ASR cloud platforms.* Journal of Reliable Intelligent Environments 5:163–172, 2019. doi:10.1007/s40860-019-00085-y
-8. *Speech Accessibility Project, Parkinson's speech,* JSLHR 2024. https://pubs.asha.org/doi/pdf/10.1044/2024_JSLHR-24-00122
+8. Hasegawa-Johnson, M. et al. *Community-Supported Shared Infrastructure in Support of Speech Accessibility* (Speech Accessibility Project). JSLHR 2024. doi:10.1044/2024_JSLHR-24-00122
 9. Green, J. R. et al. *Automatic Speech Recognition of Disordered Speech: Personalized models outperforming human listeners on short phrases.* Interspeech 2021, 4778–4782. doi:10.21437/Interspeech.2021-1384
 10. Google Research, *Project Euphonia.* https://sites.research.google/euphonia/about
 11. Amazon UK, *Voiceitt launches speech recognition app with Alexa integration* (2021). https://www.aboutamazon.co.uk/news/innovation/voiceitt-launches-innovative-speech-recognition-app-with-alexa-integration-to-improve-communication-for-individuals-with-speech-impairments
 12. Google Research blog, *Responsible AI at Google Research: AI for Social Good* (2023). https://research.google/blog/responsible-ai-at-google-research-ai-for-social-good/
 13. Rudzicz, F., Namasivam, A. K., Wolff, T. *The TORGO database of acoustic and articulatory speech from speakers with dysarthria.* Language Resources and Evaluation 46(4):523–541, 2012. Hugging Face: `abnerh/TORGO-database`.
 
-> Note: the numbers in items 7 and 8 are taken from the abstracts.
+> Note: the numbers from [7] and [8] are taken from the papers' abstracts (checked on 14 Nov 2026), not from the full texts.

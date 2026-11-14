@@ -25,6 +25,8 @@ Don't make the person speak like everyone else; learn how *they* speak. In Utter
 
 With "not sure" enabled: 71% correct, 5% wrong, 24% asked to repeat. Chance is 12.5%; with shuffled labels accuracy drops to 10%, so there is no leakage. Each recording is used once (TORGO records with two microphones), and every design choice was made on healthy speakers or on other people, never on the person being tested.
 
+We also tested the app itself end to end. A script taught it 5 words with 3 TORGO recordings each and then sent it held-out recordings over HTTP: for 4 people with dysarthria, the top guess was correct 77% of the time and wrong actions were 5% (chance is 20%).
+
 The biggest gains are for the hardest-to-understand speakers. For two people with severe dysarthria, Whisper got 20% of words and Utter 87%.
 
 **What we learned honestly:** for common English words, other people's recordings already help a lot, and combining them with the person's own is best. Personal recordings matter where others fail. For F01, the speaker Whisper understood least (8%), a single own recording per word beat other people's recordings (73% vs. 55%). They also matter for sounds a person invents, where nobody else's recordings exist; that is what the app relies on.
