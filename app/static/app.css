@@ -9,6 +9,7 @@ a:hover { color: var(--pink); }
 button, input { font-family: inherit; }
 button { -webkit-tap-highlight-color: transparent; }
 button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+h1[tabindex="-1"]:focus { outline: none; }
 *::-webkit-scrollbar { display: none; }
 .display { font-family: var(--font-display); letter-spacing: -0.03em; font-weight: 500; }
 i[class^="ph"] { line-height: 1; }

@@ -109,7 +109,7 @@ Requires `outputs/results.json` from the notebook.
 ```bash
 .venv\Scripts\python -m uvicorn app.server:app --port 8000
 ```
-Open http://localhost:8000 and allow the microphone. Everything runs on your computer: the browser records 16 kHz WAV directly (no ffmpeg needed) and the server runs WavLM (and Whisper, to show what a regular assistant would hear). Taught words are saved in `data/app_state/`.
+Open http://localhost:8000 and allow the microphone. Everything runs on your computer: the browser records 16 kHz WAV directly (no ffmpeg needed) and the server runs WavLM (and Whisper, to show what a regular assistant would hear). Taught words are saved in `data/app_state/`. Browsers allow the microphone only on `localhost` or HTTPS, so to try it on a phone, open it through an HTTPS tunnel or deploy it with HTTPS.
 
 Screens: **Speak** (listen → guess → confirm → Utter says the sentence), **My words**, **Teach** (pick a meaning, record 3×), and **Proof** (results on TORGO, real examples where Whisper failed). Nothing is spoken until the person confirms. Bad recordings can be removed in the word's detail (they're moved to an archive folder, not deleted). For switch users, the **Space** key starts and stops listening and recording. Design: [`design/Utter App.dc.html`](design/).
 

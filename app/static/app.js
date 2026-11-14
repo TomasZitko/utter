@@ -387,6 +387,9 @@ const TABS = [
 ];
 function render() {
   const sc = S.screen;
+  // Klávesnice: když byl fokus v aplikaci, po překreslení ho dáme na nadpis nové obrazovky (ne na začátek stránky).
+  const hadFocus = $("#phone").contains(document.activeElement) && document.activeElement !== document.body;
+  const sameScreen = render.last === sc; render.last = sc;
   $("#view").innerHTML = SCREENS[sc]();
   const navOn = ["home", "words", "teach1", "proof"].includes(sc);
   $("#nav").style.display = navOn ? "" : "none";
@@ -394,6 +397,10 @@ function render() {
     <span class="ic"><i class="ph-${sc === t.k ? "fill" : "bold"} ph-${t.icon}"></i></span>${t.label}</button>`).join("");
   const dark = ["home", "listen", "result", "teach2", "teach3", "detail", "speak"].includes(sc);
   $("#phone").style.setProperty("--status", dark ? "#141414" : "#F3EBDD");
+  if (hadFocus && !sameScreen) {
+    const h = $("#view h1");
+    if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
+  }
   const custom = $("#custom");
   if (custom) custom.addEventListener("input", (e) => { S.teach.custom = e.target.value; $("#teach-continue").innerHTML = teachContinueHTML(); });
 }
