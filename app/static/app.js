@@ -434,7 +434,7 @@ const ACT = {
       return ACT.teachNew();
     }
     go("listen");
-    await startRecording(LISTEN_SECONDS, recognize);
+    if (!(await startRecording(LISTEN_SECONDS, recognize))) go("home");
   },
   finishListen() { stopRecording(); },
   cancelListen() { stopRecording(true); go("home"); },
@@ -532,7 +532,7 @@ document.addEventListener("click", (e) => {
 // Jedna klávesa (mezerník) pro lidi, kteří ovládají počítač spínačem (switch access).
 const SPACE_ACTION = { home: "startListen", listen: "finishListen", teach2: "record", teach3: "startListen", result: "startListen" };
 document.addEventListener("keydown", (e) => {
-  if (e.code !== "Space" || e.repeat || e.target.closest("input, textarea, button, audio")) return;
+  if (e.code !== "Space" || e.repeat || e.target.closest?.("input, textarea, button, audio")) return;
   const act = SPACE_ACTION[S.screen];
   if (act) { e.preventDefault(); ACT[act](); }
 });
