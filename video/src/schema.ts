@@ -4,7 +4,7 @@
 import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
 
-export const sceneIds = ["wake", "problem", "heardWrong", "stat", "flip", "teach", "vocab", "match", "payoff", "notSure", "result", "outro", "appTeach", "appListen", "appUnsure"] as const;
+export const sceneIds = ["wake", "problem", "heardWrong", "stat", "flip", "teach", "vocab", "match", "payoff", "notSure", "result", "outro", "appTeach", "appListen", "appUnsure", "demoTeach", "demoListen"] as const;
 
 export const storyboardSchema = z.object({
   title: z.string(),
@@ -36,6 +36,9 @@ export const storyboardSchema = z.object({
   teachClips: z.array(z.string()),
   vocab: z.array(z.object({ meaning: z.string(), clip: z.string() })).describe("Vocabulary tiles: a meaning from the app + a real recording as 'your sound'"),
   matchClips: z.array(z.string()),
+  problemStyle: z.enum(["grid", "people"]).optional().describe("Background of the problem scene"),
+  demo: z.object({ teachTitle: z.string(), listenTitle: z.string(), teachSpeech: z.array(z.number()), listenScreen: z.number(), listenSpeech: z.number() }).optional()
+    .describe("Real-app demo (v3): titles + measured moments in the captured footage"),
   music: z.string().optional().describe("Score file in public/ (built by npm run assets)"),
   appVoices: z.object({ teach: z.array(z.string()), listen: z.string(), unsure: z.string(), tts: z.string() }).optional()
     .describe("Real clips played as the app's microphone in the captured app footage"),

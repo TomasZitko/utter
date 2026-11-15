@@ -2,12 +2,13 @@
 
 <p align="center">
 <a href="https://colab.research.google.com/github/TomasZitko/utter/blob/main/notebooks/utter.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open the analysis in Google Colab"></a>
+&nbsp;·&nbsp; <a href="https://tomaszitko.github.io/utter/"><b>Live project page</b></a>
 &nbsp;·&nbsp; <a href="docs/writeup.md"><b>One-page write-up</b></a>
 &nbsp;·&nbsp; <a href="notebooks/utter.ipynb">Notebook with outputs</a>
 &nbsp;·&nbsp; <a href="docs/research.md">Research and sources</a>
 </p>
 
-**Utter app** · Tomáš + Jonáš · Veritas AI International High School Hackathon 2026 · Track: AI + Languages
+**Utter app** · Jonáš, Tomáš and Benjamín · Veritas AI International High School Hackathon 2026 · Track: AI + Languages
 
 People after a stroke, with Parkinson's, ALS or cerebral palsy often have **dysarthria**: speech that is slurred, slow or hard to understand. Many of them also can't use their hands well, so voice should be their way to control a phone, a smart home or a wheelchair. But standard speech recognition is trained on typical speech and often fails them: on real recordings, Whisper understands **42%** of their single words.
 
@@ -195,7 +196,7 @@ app/static/                 frontend (plain HTML/CSS/JS): app.js (phone app), en
 design/                     app design
 experiments/                method comparison on speakers without dysarthria, app tests on TORGO and
                             in the browser, build_demo_pack.py (recordings for Real voices)
-docs/                       write-up, research with sources, video script, screenshots
+docs/                       project page (GitHub Pages), write-up, research with sources, video script
 video/                      source of the launch film (Remotion)
 ```
 

@@ -1,6 +1,6 @@
 # Utter: voice control that learns *your* speech
 
-**Track:** Languages · **Team:** Tomáš + Jonáš
+**Track:** Languages · **Team:** Jonáš, Tomáš and Benjamín
 Code, notebook and app: https://github.com/TomasZitko/utter
 
 ## The problem

@@ -53,7 +53,6 @@ export const Stat: React.FC = () => {
           </div>
         </div>
       ) : null}
-      <Sfx name="impact" at={34} volume={0.55} />
     </Stage>
   );
 };
@@ -338,7 +337,6 @@ export const Result: React.FC = () => {
         <Blub shape={sb.blub} size={230 * u} x={cx + 0.5 * (colW + gap)} y={utterTop - 84 * u - Math.sin(Math.min(1, land) * Math.PI) * 30 * u} mood={f > cols[1].at + 26 ? "happy" : "idle"} look={[0, -6]} />
       </div>
       <Sfx name="tick" at={cols[0].at} volume={0.5} />
-      <Sfx name="impact" at={cols[1].at + 26} volume={0.6} />
     </Stage>
   );
 };

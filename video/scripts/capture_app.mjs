@@ -50,6 +50,15 @@ const until = async (expr, ms = 30000) => {
   throw new Error("timeout: " + expr);
 };
 
+// save audio the app itself recorded (fetched from the film server), so the film plays exactly what the app heard
+const saveAudio = async (url, file) => {
+  const b64 = await page.evaluate(async (u) => {
+    const r = await fetch(u); const buf = new Uint8Array(await r.arrayBuffer());
+    let s = ""; for (let i = 0; i < buf.length; i += 0x8000) s += String.fromCharCode(...buf.subarray(i, i + 0x8000));
+    return btoa(s);
+  }, url);
+  fs.writeFileSync(path.join(outDir, file), Buffer.from(b64, "base64"));
+};
 await page.goto(URL, { waitUntil: "networkidle0" });
 await page.addStyleTag({ content: `#phone{position:fixed!important;left:0!important;top:0!important;margin:0!important;transform:scale(3);transform-origin:0 0;border-radius:0!important;z-index:2147483000;box-shadow:none!important}` });
 await wait(1500);
@@ -93,6 +102,16 @@ if (session === "teach") {
 
 await cdp.send("Page.stopScreencast");
 mark("end");
+if (session === "teach") {
+  const words = await page.evaluate(() => fetch("/api/words").then((r) => r.json()));
+  const w = words.find((x) => x.label === "Tired");
+  const takes = [...(w?.take_list ?? [])].reverse();   // the app lists newest first
+  for (let i = 0; i < takes.length; i++) await saveAudio(`/api/takes/${takes[i].id}/audio`, `take${i + 1}.wav`);
+  console.log("saved takes:", takes.length);
+} else if (session === "listen") {
+  const id = await state("S.result && S.result.rec_id");
+  if (id) { await saveAudio(`/api/recent/${id}/audio`, "rec.wav"); console.log("saved rec", id); }
+}
 await browser.close();
 
 // frames -> constant 30 fps video using each frame's real display time

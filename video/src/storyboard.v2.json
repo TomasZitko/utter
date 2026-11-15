@@ -191,5 +191,6 @@
     "listen": "M02_2_0107",
     "unsure": "M02_2_0157",
     "tts": "tts_tired"
-  }
+  },
+  "problemStyle": "people"
 }

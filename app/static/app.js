@@ -424,13 +424,15 @@ const SCREENS = {
 
   teach1() {
     const t = S.teach;
+    const picked = t.sel != null && !t.custom;
     const grid = MEANINGS.map(loc).map((m, i) => `
-      <button class="meaning" role="radio" aria-checked="${t.sel === i && !t.custom}" style="--main:${m.main}" data-act="pickMeaning" data-arg="${i}">
-        <i class="ph-${t.sel === i && !t.custom ? "fill" : "bold"} ph-${m.icon}"></i>${esc(m.label)}</button>`).join("");
+      <button class="meaning" role="radio" aria-checked="${t.sel === i && !t.custom}" style="--main:${m.main};--pale:${m.pale}" data-act="pickMeaning" data-arg="${i}">
+        <span class="ic"><i class="ph-fill ph-${m.icon}"></i></span>${esc(m.label)}</button>`).join("");
+    // Blub asks the question and smiles once something is picked (same character as every other screen).
     return `<div class="page teach">
-      <div class="page-head" style="gap:8px;padding:0">
-        <span class="kicker accent">Step 1 of 2</span>
-        <h1 class="h1" style="font-size:42px;line-height:1.02">What should this sound mean?</h1>
+      <div class="teach-head">
+        <span class="mini">${mascot({ key: "teach-mini", mood: picked || t.custom ? "happy" : "idle", R: 205, lobes: 7, amp: 0.09, faceY: 232, faceScale: 2.3, wobble: 0.7 })}</span>
+        <h1 class="h1">What should this sound mean?</h1>
       </div>
       <div role="radiogroup" aria-label="Meaning" class="meanings">${grid}</div>
       <label class="field"><i class="ph-bold ph-pencil-simple"></i>

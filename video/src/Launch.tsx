@@ -9,11 +9,12 @@ import { Problem, Wake } from "./scenes/Open";
 import { Flip, Match, NotSure, Outro, Result, Stat, Teach, Vocab } from "./scenes/Story";
 import { HeardWrong, Payoff } from "./scenes/Voices";
 import { AppListen, AppTeach, AppUnsure } from "./scenes/AppScenes";
+import { DemoListen, DemoTeach } from "./scenes/AppDemo";
 
 export const SCENES: Record<Storyboard["scenes"][number]["id"], React.FC> = {
   wake: Wake, problem: Problem, heardWrong: HeardWrong, stat: Stat, flip: Flip, teach: Teach,
   vocab: Vocab, match: Match, payoff: Payoff, notSure: NotSure, result: Result, outro: Outro,
-  appTeach: AppTeach, appListen: AppListen, appUnsure: AppUnsure,
+  appTeach: AppTeach, appListen: AppListen, appUnsure: AppUnsure, demoTeach: DemoTeach, demoListen: DemoListen,
 };
 
 export const Launch: React.FC<Storyboard> = (sb) => {

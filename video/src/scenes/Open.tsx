@@ -4,7 +4,7 @@
 import React from "react";
 import { AbsoluteFill, interpolate, random, useCurrentFrame, useVideoConfig } from "remotion";
 import { Blub } from "../kit/Blub";
-import { inOut, Reveal, Sfx, Stage, tw, useBeat, useSB, useU, pop } from "../kit/kit";
+import { Grid, inOut, Reveal, Sfx, Stage, tw, useBeat, useSB, useU, pop } from "../kit/kit";
 import { C, fontDisplay } from "../theme";
 
 export const Wordmark: React.FC<{ start: number; size: number; color?: string }> = ({ start, size, color = C.text }) => {
@@ -145,7 +145,7 @@ export const Problem: React.FC = () => {
   const last = word.pop() ?? "";
   return (
     <Stage>
-      <People start={0} diff={18} out={3.3 * b} />
+      {sb.problemStyle === "people" ? <People start={0} diff={18} out={3.3 * b} /> : <Grid start={0} xs={[0.12 * (W / H > 1.3 ? 1 : 0.66), 0.88]} ys={[0.24, 0.76]} out={bigAt - 4} />}
       <div style={{ position: "absolute", left: x0, top: H * 0.42 - lift * 200 * u, opacity: 1 - lift * 0.62 - tw(f, bigAt - 6, 8) * 0.38 }}>
         <Reveal text={sb.copy.problemA} start={4} size={100 * u} style={{ maxWidth: W - 2 * x0 }} />
       </div>

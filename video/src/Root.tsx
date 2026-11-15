@@ -8,14 +8,27 @@ import { Launch, SceneSolo } from "./Launch";
 import { framesPerBeat, sceneIds, Storyboard, storyboardSchema, totalFrames } from "./schema";
 import storyboard from "./storyboard.json";
 import storyboardV2 from "./storyboard.v2.json";
+import storyboardV3 from "./storyboard.v3.json";
 
 const defaults = storyboard as Storyboard;
 const v2 = storyboardV2 as Storyboard;
+const v3 = storyboardV3 as Storyboard;
 
 export const RemotionRoot: React.FC = () => {
   const fpb = framesPerBeat(defaults);
   return (
     <>
+      <Composition
+        id="Launch-v3"
+        component={Launch}
+        schema={storyboardSchema}
+        defaultProps={v3}
+        width={1920}
+        height={1080}
+        fps={v3.fps}
+        durationInFrames={totalFrames(v3)}
+        calculateMetadata={({ props }) => ({ durationInFrames: totalFrames(props), fps: props.fps })}
+      />
       <Composition
         id="Launch-v2"
         component={Launch}
@@ -51,7 +64,7 @@ export const RemotionRoot: React.FC = () => {
       />
       <Folder name="Scenes">
         {sceneIds.map((id) => {
-          const sb = defaults.scenes.some((s) => s.id === id) ? defaults : v2;
+          const sb = [defaults, v3, v2].find((x) => x.scenes.some((s) => s.id === id)) ?? defaults;
           const bars = sb.scenes.find((s) => s.id === id)?.bars ?? 2;
           return (
             <Composition

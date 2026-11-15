@@ -316,6 +316,8 @@ LAYERS = {
     "flip":       dict(pad=0.5, bright=0.35, sub=0.3, riser=1),
     "teach":      dict(pad=0.5, bright=0.5, sub=0.6, kick=1, hat=0.7, pluck=0.8),
     "vocab":      dict(pad=0.5, bright=0.55, sub=0.6, kick=1, hat=0.8, pluck=0.9, clap=0.4),
+    "demoTeach":  dict(pad=0.45, bright=0.35, sub=0.45, hat=0.35, pluck=0.35),
+    "demoListen": dict(pad=0.45, bright=0.3, sub=0.4, hat=0.25, pluck=0.2),
     "appTeach":   dict(pad=0.45, bright=0.45, sub=0.5, kick=0.8, hat=0.6, pluck=0.6),
     "appListen":  dict(pad=0.45, bright=0.4, sub=0.5, kick=0.6, hat=0.4, pluck=0.3),
     "appUnsure":  dict(pad=0.5, bright=0.3, sub=0.3, bell=0.6),

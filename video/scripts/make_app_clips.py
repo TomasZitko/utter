@@ -13,7 +13,8 @@ CAP = ROOT.parent / "data/film_state"
 OUT = ROOT / "public/app"
 OUT.mkdir(parents=True, exist_ok=True)
 meta = {}
-for name in ("teach", "listen", "unsure"):
+import shutil, sys
+for name in (sys.argv[1:] or ["teach", "listen"]):
     d = CAP / f"cap_{name}"
     ev = json.loads((d / "events.json").read_text())
     b = ev["box"]
@@ -25,6 +26,11 @@ for name in ("teach", "listen", "unsure"):
     events = {e["name"]: round(e["t"] + offset, 3) for e in ev["events"]}
     dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(OUT / f"{name}.mp4")],
                                capture_output=True, text=True).stdout)
-    meta[name] = {"w": w, "h": h, "dur": round(dur, 3), "events": events}
+    audio = sorted(x.name for x in d.glob("*.wav"))
+    for a in audio:   # what the app itself recorded during the capture
+        shutil.copy(d / a, ROOT / "public/voices" / f"app_{name}_{a}")
+    meta[name] = {"w": w, "h": h, "dur": round(dur, 3), "events": events, "audio": [f"app_{name}_{a[:-4]}" for a in audio]}
     print(name, f"{w}x{h}", f"{dur:.1f}s", events)
-(ROOT / "src/generated/app.json").write_text(json.dumps(meta, indent=2))
+old = json.loads((ROOT / "src/generated/app.json").read_text()) if (ROOT / "src/generated/app.json").exists() else {}
+old.update(meta)
+(ROOT / "src/generated/app.json").write_text(json.dumps(old, indent=2))

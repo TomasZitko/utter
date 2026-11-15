@@ -1,0 +1,199 @@
+{
+  "title": "Utter: launch film v3",
+  "fps": 30,
+  "bpm": 100,
+  "beatsPerBar": 4,
+  "scenes": [
+    {
+      "id": "wake",
+      "bars": 2
+    },
+    {
+      "id": "problem",
+      "bars": 3
+    },
+    {
+      "id": "heardWrong",
+      "bars": 5
+    },
+    {
+      "id": "stat",
+      "bars": 2
+    },
+    {
+      "id": "flip",
+      "bars": 2
+    },
+    {
+      "id": "demoTeach",
+      "bars": 6
+    },
+    {
+      "id": "match",
+      "bars": 2
+    },
+    {
+      "id": "demoListen",
+      "bars": 5
+    },
+    {
+      "id": "payoff",
+      "bars": 5
+    },
+    {
+      "id": "notSure",
+      "bars": 2
+    },
+    {
+      "id": "result",
+      "bars": 3
+    },
+    {
+      "id": "outro",
+      "bars": 1.5
+    }
+  ],
+  "copy": {
+    "problemA": "Millions of people speak differently.",
+    "problemB": [
+      "After a stroke.",
+      "With Parkinson's.",
+      "ALS.",
+      "Cerebral palsy."
+    ],
+    "problemC": "It's called dysarthria.",
+    "heardWrongAssistant": "OpenAI Whisper heard",
+    "heardWrongSaid": "They said",
+    "statLine": "OpenAI's Whisper understands",
+    "statOf": "of their words.",
+    "statControl": "73% for typical speakers.",
+    "flipA": "So we flipped it.",
+    "flipB": "What if it learned",
+    "flipHighlight": "your voice?",
+    "teachTitle": "Say it a couple of times. Tell it what it means.",
+    "teachSentence": "Can I have some water, please?",
+    "matchTitle": "WavLM hears the sound.",
+    "matchSub": "Time warping lines it up.",
+    "notSureA": "When it's not sure,",
+    "notSureB": "it asks.",
+    "notSureC": "Instead of guessing.",
+    "resultTitle": "7 speakers with dysarthria. 2 own recordings + other speakers'.",
+    "resultWrong": "5% wrong actions with \"not sure\" on.",
+    "outroTagline": "Say it your way.",
+    "outroFoot": "Open source · github.com/TomasZitko/utter",
+    "teachQuestion": "What should this sound mean?",
+    "teachSound": "sip",
+    "teachMeaning": "Water",
+    "vocabTitle": "Sound by sound, it builds your own vocabulary.",
+    "vocabSub": "Any sound can mean whatever you choose.",
+    "whisperNote": "Whisper is OpenAI's widely used open speech recognition model (small version)."
+  },
+  "numbers": {
+    "whisper": 42,
+    "whisperControl": 73,
+    "utter": 84,
+    "wrongWithNotSure": 5
+  },
+  "voices": [
+    {
+      "clip": "F01_1_0019",
+      "speaker": "F01",
+      "said": "storm",
+      "whisper": "Go on."
+    },
+    {
+      "clip": "F01_1_0046",
+      "speaker": "F01",
+      "said": "chair",
+      "whisper": "cute"
+    },
+    {
+      "clip": "M02_1_0091",
+      "speaker": "M02",
+      "said": "sip",
+      "whisper": "fear"
+    }
+  ],
+  "teachClips": [
+    "M02_1_0012",
+    "M02_1_0078"
+  ],
+  "blub": {
+    "color": "#FFC93C",
+    "R": 205,
+    "lobes": 7,
+    "amp": 0.09,
+    "faceY": 232,
+    "faceScale": 2.3,
+    "wobble": 0.7
+  },
+  "matchClips": [
+    "M02_1_0012",
+    "M02_1_0091"
+  ],
+  "voiceSlots": {
+    "startBeat": 1,
+    "everyBeats": 6
+  },
+  "wipes": [
+    "flip",
+    "result"
+  ],
+  "vocab": [
+    {
+      "meaning": "Water",
+      "clip": "M02_1_0012"
+    },
+    {
+      "meaning": "Pain",
+      "clip": "M02_1_0006"
+    },
+    {
+      "meaning": "Bathroom",
+      "clip": "M02_1_0007"
+    },
+    {
+      "meaning": "Food",
+      "clip": "M02_1_0010"
+    },
+    {
+      "meaning": "Walk",
+      "clip": "M02_1_0015"
+    },
+    {
+      "meaning": "TV",
+      "clip": "M02_1_0019"
+    },
+    {
+      "meaning": "Family",
+      "clip": "M02_1_0021"
+    },
+    {
+      "meaning": "Help",
+      "clip": "M02_1_0025"
+    }
+  ],
+  "music": "audio/music_v3.wav",
+  "problemStyle": "grid",
+  "demo": {
+    "teachTitle": "Teach it a sound.",
+    "listenTitle": "Then just say it.",
+    "teachSpeech": [
+      9.82,
+      14.03,
+      18.84
+    ],
+    "listenScreen": 7.25,
+    "listenSpeech": 8.51
+  },
+  "appVoices": {
+    "teach": [
+      "M02_1_0131",
+      "M02_1_0201",
+      "M02_1_0233"
+    ],
+    "listen": "M02_2_0107",
+    "unsure": "M02_2_0157",
+    "tts": "tts_tired"
+  }
+}
