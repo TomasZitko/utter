@@ -22,3 +22,9 @@ CLAUDE.md
 
 # poznámky pro Tomáše (lokální)
 RANO_TOMAS.md
+
+# launch film: dependencies and renders
+video/node_modules/
+video/out/
+# real TORGO clips are rebuilt from data/sim (TORGO is not redistributed here)
+video/public/voices/

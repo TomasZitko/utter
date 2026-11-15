@@ -1,0 +1,24 @@
+{
+  "colors": {
+    "page": "#0E0D0C",
+    "bg": "#181716",
+    "surface": "#232220",
+    "text": "#F3EBDD",
+    "muted": "#B5AC9E",
+    "ink": "#141414",
+    "line": "rgba(243, 235, 221, .18)",
+    "line-soft": "rgba(243, 235, 221, .1)",
+    "line-mid": "rgba(243, 235, 221, .28)",
+    "accent": "#FFC93C",
+    "pink": "#F8A4D2",
+    "danger": "#F4583E",
+    "ok": "#8FD9B0",
+    "ask": "#B5AC9E",
+    "blue": "#8FD3FF"
+  },
+  "fonts": {
+    "display": "Familjen Grotesk",
+    "body": "Instrument Sans"
+  },
+  "source": "app/static/tokens.css"
+}

@@ -31,7 +31,7 @@ Naše vlastní měření (Whisper na TORGO) je v notebooku a v `outputs/results.
 
 ## 3. Existující řešení a čím se lišíme
 
-| | Google Project Relate / Euphonia | Voiceitt | Slyším tě (my) |
+| | Google Project Relate / Euphonia | Voiceitt | Utter (my) |
 |---|---|---|---|
 | Co to je | Aplikace pro Android, personalizovaný model pro přepis a povely pro Google Asistenta [10] | Aplikace s integrací do Alexy, personalizované povely a fráze [11] | Výzkumný prototyp: notebook a lokální webová aplikace |
 | Kolik nahrávek je potřeba | Sada frází při zaučení, výzkumně 3–4 minuty řeči [12] | Každou frázi je potřeba namluvit několikrát [11] | 3 nahrávky na povel |

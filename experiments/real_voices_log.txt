@@ -1,0 +1,10 @@
+F01 (severe, 1 own recording(s) per word, n=55): top guess right 75% | acts right 56%, asks again 36%, acts wrong 7% | Whisper right 11% | median 58 ms
+F03 (moderate, 2 own recording(s) per word, n=72): top guess right 57% | acts right 31%, asks again 64%, acts wrong 6% | Whisper right 50% | median 87 ms
+F04 (mild, 2 own recording(s) per word, n=64): top guess right 77% | acts right 66%, asks again 31%, acts wrong 3% | Whisper right 59% | median 74 ms
+M01 (severe, 2 own recording(s) per word, n=53): top guess right 87% | acts right 66%, asks again 34%, acts wrong 0% | Whisper right 17% | median 78 ms
+M02 (severe, 2 own recording(s) per word, n=62): top guess right 73% | acts right 55%, asks again 40%, acts wrong 5% | Whisper right 24% | median 88 ms
+M03 (mild, 2 own recording(s) per word, n=53): top guess right 91% | acts right 83%, asks again 15%, acts wrong 2% | Whisper right 70% | median 78 ms
+M04 (severe, 2 own recording(s) per word, n=79): top guess right 56% | acts right 11%, asks again 82%, acts wrong 6% | Whisper right 14% | median 213 ms
+M05 (moderate-severe, 2 own recording(s) per word, n=70): top guess right 74% | acts right 53%, asks again 43%, acts wrong 4% | Whisper right 46% | median 292 ms
+
+Mean over 8 people (508 unheard recordings, 6 word sets each, own recordings only): top guess right 73.5%; with 'not sure': acts right 52.6%, asks again 43.3%, acts wrong 4.2%. Whisper right 36.4%. Median recognition time 89 ms. Took 950 s.

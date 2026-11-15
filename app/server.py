@@ -61,7 +61,7 @@ SIM_COLORS = [("#4C7DFF", "#C9D8FF"), ("#FF9E5E", "#FFDCC2"), ("#8FD9B0", "#D5F2
 # -------------------------------------------
 
 if not RESULTS_PATH.exists():
-    raise SystemExit(f"Missing {RESULTS_PATH}. Run the notebook notebooks/slysim_te.ipynb first.")
+    raise SystemExit(f"Missing {RESULTS_PATH}. Run the notebook notebooks/utter.ipynb first.")
 RESULTS = json.loads(RESULTS_PATH.read_text(encoding="utf-8"))
 SR = RESULTS["sr"]
 TRIM_DB = RESULTS["trim_db"]

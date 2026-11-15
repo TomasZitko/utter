@@ -1,18 +1,39 @@
-# Utter: voice control that learns *your* speech
+<p align="center"><img src="docs/img/banner.svg" alt="Utter. Say it your way. Voice control that learns the speech of people with dysarthria." width="100%"></p>
 
-**Team Slyším tě** (Tomáš + Jonáš) · Veritas AI Hackathon 2026 · Track: AI + Languages
+<p align="center">
+<a href="https://colab.research.google.com/github/TomasZitko/utter/blob/main/notebooks/utter.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open the analysis in Google Colab"></a>
+&nbsp;·&nbsp; <a href="docs/writeup.md"><b>One-page write-up</b></a>
+&nbsp;·&nbsp; <a href="notebooks/utter.ipynb">Notebook with outputs</a>
+&nbsp;·&nbsp; <a href="docs/research.md">Research and sources</a>
+</p>
 
-People after a stroke, with Parkinson's, ALS or cerebral palsy often have **dysarthria**: speech that is slurred, slow or hard to understand. Many of them also can't use their hands well, so voice should be their way to control a phone, a smart home or a wheelchair. But standard speech recognition is trained on typical speech and often fails them.
+**Utter app** · Tomáš + Jonáš · Veritas AI International High School Hackathon 2026 · Track: AI + Languages
+
+People after a stroke, with Parkinson's, ALS or cerebral palsy often have **dysarthria**: speech that is slurred, slow or hard to understand. Many of them also can't use their hands well, so voice should be their way to control a phone, a smart home or a wheelchair. But standard speech recognition is trained on typical speech and often fails them: on real recordings, Whisper understands **42%** of their single words.
 
 **Utter** turns the problem around. Instead of asking the person to speak like everyone else, it learns *their* way of saying things. You record a sound **three times**, tell Utter what it means, and from then on Utter recognises it and speaks the full sentence for you. When it isn't sure, it says so and asks again instead of guessing, because a wrong action is worse than no action.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/TomasZitko/slysim-te/blob/main/notebooks/slysim_te.ipynb) [**Open the analysis in Google Colab**](https://colab.research.google.com/github/TomasZitko/slysim-te/blob/main/notebooks/slysim_te.ipynb) · [One-page write-up](docs/writeup.md) · [Research and sources](docs/research.md)
+| Regular speech recognition (Whisper) | **Utter** | Wrong actions with "not sure" on |
+|:---:|:---:|:---:|
+| 42% | **84%** | 5% |
 
-![Utter running live on a real recording: the app in the middle, the live test on the left, the model internals on the right](docs/img/utter_live.png)
+*Single words from 7 people with dysarthria in the TORGO database, recordings the model never heard. Details and the weaker numbers are in [Results](#results).*
+
+## See it work
+
+![Utter running live on a real recording: the live test on the left, the app in the middle, the model internals on the right](docs/img/utter_live.png)
 
 *A real screenshot, not a mock-up. Left: **Real voices**, a live test on a real person with severe dysarthria from TORGO (speaker M02). The app was taught 8 of his words from 2 of his own recordings each and is now hearing recordings it has never heard; a regular assistant (Whisper) gets the same ones. Middle: the app. Right: the **Engine** panel shows what the model did with this recording: the frames it became, the time-warped alignment with the closest stored recording, the distance to every word, and the lead it needs before it acts. The score on the left is counted live, including the mistakes.*
 
-![App screens](docs/img/utter_screens.png)
+## How it works, in one picture
+
+![How Utter recognises a word: teach three recordings, a neural speech model turns sound into vectors, time warping compares them with stored examples, and Utter acts only when one word clearly leads](docs/img/how_it_works.svg)
+
+The AI is the part that listens. [WavLM](https://huggingface.co/microsoft/wavlm-base-plus) is a neural network with about 95 million parameters that learned from unlabelled speech what speech sounds like. Utter uses it for few-shot learning: nothing is retrained, so two or three recordings of a word are enough. More detail is in [How it works](#how-it-works).
+
+## The app
+
+![The app's screens](docs/img/utter_screens.png)
 
 ## Results
 
@@ -46,6 +67,24 @@ Charts: [each person](outputs/1_per_speaker.png), [how many recordings are enoug
 | **Mean** | | **77%** | **54%** | **5%** |
 
 Chance is 20%. This is a small test (50–78 recordings per person), but it checks the whole app path: WAV upload, trimming, WavLM, DTW and the "not sure" threshold. Raw results: `experiments/app_end_to_end_results.csv`.
+
+### Real voices, run for all 8 people
+
+[`experiments/real_voices_test.py`](experiments/real_voices_test.py) repeats what the app's Real voices panel does, for every person and 6 random word sets each: the app learns 8 of the person's words from their own recordings only (2 per word; 1 for F01, who has too few repeats), then recognises every other recording of those words. Whisper transcribes the same recordings. 508 unheard recordings in total, run on 15 Nov 2026.
+
+| Person | Severity | Top guess right | Acts right | Asks again | Acts wrong | Whisper right |
+|---|---|---|---|---|---|---|
+| F01 | severe | 75% | 56% | 36% | 7% | 11% |
+| M01 | severe | 87% | 66% | 34% | 0% | 17% |
+| M02 | severe | 73% | 55% | 40% | 5% | 24% |
+| M04 | severe | 56% | 11% | 82% | 6% | 14% |
+| M05 | moderate-severe | 74% | 53% | 43% | 4% | 46% |
+| F03 | moderate | 57% | 31% | 64% | 6% | 50% |
+| F04 | mild | 77% | 66% | 31% | 3% | 59% |
+| M03 | mild | 91% | 83% | 15% | 2% | 70% |
+| **Mean** | | **74%** | **53%** | **43%** | **4%** | **36%** |
+
+This is the own-recordings-only setting, so it matches the notebook's own-only numbers (74% top guess; 54% right, 41% asks again, 5% wrong), not the 84% of the combined model. It is honest about the hard cases: for M04 the app mostly asks again instead of acting. The median recognition time was 89 ms on a laptop GPU. Raw results: `experiments/real_voices_results.csv`.
 
 ### The app's screens, tested with a fake microphone
 
@@ -97,14 +136,14 @@ Scripts: [`experiments/phase2_dtw.py`](experiments/phase2_dtw.py), [`experiments
 ## Run it
 
 ### The analysis (notebook)
-- **Colab:** open the link above, *Runtime → Change runtime type → T4 GPU*, then *Runtime → Run all* (about 30–60 minutes).
+- **Colab:** [open the notebook in Colab](https://colab.research.google.com/github/TomasZitko/utter/blob/main/notebooks/utter.ipynb), *Runtime → Change runtime type → T4 GPU*, then *Runtime → Run all* (about 30–60 minutes).
 - **Locally (Windows/Mac/Linux, Python 3.11):**
   ```bash
   python -m venv .venv
   .venv\Scripts\activate            # Mac/Linux: source .venv/bin/activate
   pip install -r requirements.txt
   cd notebooks
-  jupyter nbconvert --to notebook --execute --inplace slysim_te.ipynb
+  jupyter nbconvert --to notebook --execute --inplace utter.ipynb
   ```
   Outputs go to `outputs/` (`results.json`, charts, example recordings), data and caches to `data/`.
 
@@ -148,16 +187,28 @@ Czech (and other languages: the method doesn't depend on language), tests with r
 ## Repository
 
 ```
-notebooks/slysim_te.ipynb   analysis, saved with outputs
+notebooks/utter.ipynb       analysis, saved with outputs (runs in Google Colab)
 outputs/                    results.json and charts
 app/server.py               FastAPI backend
 app/static/                 frontend (plain HTML/CSS/JS): app.js (phone app), engine.js (model panel),
                             lab.js (Real voices), charts.js, brand.js + tokens.css (design language)
 design/                     app design
-experiments/                method comparison on speakers without dysarthria, app end-to-end test,
-                            build_demo_pack.py (recordings for Real voices)
+experiments/                method comparison on speakers without dysarthria, app tests on TORGO and
+                            in the browser, build_demo_pack.py (recordings for Real voices)
 docs/                       write-up, research with sources, video script, screenshots
+video/                      source of the launch film (Remotion)
 ```
+
+## Sources and credits
+
+- **Data:** TORGO database of dysarthric speech, Rudzicz, Namasivam & Wolff (2012), *Language Resources and Evaluation* 46(4), 523–541; the copy on Hugging Face, [`abnerh/TORGO-database`](https://huggingface.co/datasets/abnerh/TORGO-database). No other dataset is used.
+- **Pretrained models:** [`microsoft/wavlm-base-plus`](https://huggingface.co/microsoft/wavlm-base-plus) (the model Utter listens with) and [`openai/whisper-small`](https://huggingface.co/openai/whisper-small) (the baseline).
+- **Libraries:** PyTorch, Hugging Face Transformers and Datasets, Numba, scikit-learn, pandas, Matplotlib, FastAPI. The film in `video/` is built with Remotion.
+- **Design:** our own (Blub, the mascot and logo). Icons: [Phosphor](https://phosphoricons.com). Fonts: Familjen Grotesk and Instrument Sans from Google Fonts.
+- **Background facts** (how common dysarthria is, how speech recognition does on atypical speech, existing tools): every claim has its source in [docs/research.md](docs/research.md).
+- **AI tools:** [Claude Code](https://claude.com/claude-code) as the coding assistant (code, tests, texts); [Claude](https://claude.ai), [ChatGPT](https://chatgpt.com), [Gemini](https://gemini.google.com) and [Perplexity](https://www.perplexity.ai) for research, ideas and checking explanations.
+
+Utter is a prototype built in one weekend. It is not a medical device and not medical advice.
 
 ## License
 

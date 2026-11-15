@@ -426,3 +426,5 @@ html.still #view > * , html.still svg.mascot.pop { animation: none !important; }
 /* profile: quiet labels, content fades under the status bar */
 .page.profile { padding-top: 66px; -webkit-mask-image: linear-gradient(to bottom, transparent 44px, #000 62px); mask-image: linear-gradient(to bottom, transparent 44px, #000 62px); }
 .profile .set label, .profile .set .lbl { font-size: 15px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+
+.verdict { font-size: 17px; font-weight: 600; letter-spacing: 0; text-transform: none; }
