@@ -8,6 +8,9 @@
 &nbsp;·&nbsp; <a href="docs/research.md">Research and sources</a>
 </p>
 
+<p align="center"><a href="https://tomaszitko.github.io/utter/#video"><img src="docs/img/launch_video_poster.jpg" alt="Watch the Utter launch video" width="80%"></a><br>
+<b>▶ <a href="https://tomaszitko.github.io/utter/#video">Watch the launch video</a></b> (1.5 min) · <a href="https://tomaszitko.github.io/utter/utter-launch-video.mp4">direct MP4</a></p>
+
 **Utter app** · Jonáš, Tomáš and Benjamín · Veritas AI International High School Hackathon 2026 · Track: AI + Languages
 
 People after a stroke, with Parkinson's, ALS or cerebral palsy often have **dysarthria**: speech that is slurred, slow or hard to understand. Many of them also can't use their hands well, so voice should be their way to control a phone, a smart home or a wheelchair. But standard speech recognition is trained on typical speech and often fails them: on real recordings, Whisper understands **42%** of their single words.
@@ -197,7 +200,7 @@ design/                     app design
 experiments/                method comparison on speakers without dysarthria, app tests on TORGO and
                             in the browser, build_demo_pack.py (recordings for Real voices)
 docs/                       project page (GitHub Pages), write-up, research with sources, video script
-video/                      source of the launch film (Remotion)
+video/                      source of the launch video (Remotion); the finished video is docs/utter-launch-video.mp4
 ```
 
 ## Sources and credits
