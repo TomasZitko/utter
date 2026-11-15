@@ -1,0 +1,3 @@
+# The Windows starter must keep its Windows line endings, also in the ZIP download.
+*.bat -text
+*.sh text eol=lf
