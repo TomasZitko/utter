@@ -13,7 +13,9 @@ Don't make the person speak like everyone else; learn how *they* speak. In Utter
 1. A small open speech model, **WavLM Base+**, turns each recording into a sequence of vectors (layer 12, chosen on healthy speakers only).
 2. A new recording is matched against the stored examples with **dynamic time warping**; the closest word wins. When the same word exists in recordings of other people, those are used too.
 3. If the best word isn't clearly ahead of the second best, Utter says **"Not sure, say it again"**. The threshold is calibrated on *other* people with dysarthria so that at most 5% of actions are wrong.
-4. Confirmed recordings become new examples, so Utter improves with use. Everything runs locally on a laptop.
+4. Confirmed recordings become new examples, so Utter improves with use. Everything runs locally on a laptop, in about 0.1–0.3 s per recording.
+
+The app shows its work: an Engine panel draws the alignment, the distance to every word and the lead it needs before acting. A **Real voices** mode teaches the app the words of a real TORGO speaker and recognises their unheard recordings live, next to Whisper.
 
 ## Results (TORGO, 7 people with dysarthria, 8-word sets, 50 random repeats)
 | Model | Accuracy |

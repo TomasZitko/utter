@@ -44,6 +44,40 @@ class WavRecorder {
   }
 }
 
+// Plays a recording from a URL and reports its loudness, so the wave moves with the real audio.
+class ClipPlayer {
+  async play(url, onStart) {
+    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const data = await (await fetch(url)).arrayBuffer();
+    const audio = await this.ctx.decodeAudioData(data);
+    this.src = this.ctx.createBufferSource();
+    this.src.buffer = audio;
+    this.analyser = this.ctx.createAnalyser();
+    this.analyser.fftSize = 512;
+    this.buf = new Float32Array(this.analyser.fftSize);
+    this.src.connect(this.analyser);
+    this.analyser.connect(this.ctx.destination);
+    this.seconds = audio.duration;
+    return new Promise((done) => {
+      this.src.onended = () => { this.stop(); done(); };
+      this.src.start();
+      if (onStart) onStart();
+    });
+  }
+  level() {
+    if (!this.analyser) return 0;
+    this.analyser.getFloatTimeDomainData(this.buf);
+    let s = 0;
+    for (const v of this.buf) s += v * v;
+    return Math.min(1, Math.sqrt(s / this.buf.length) * 6);
+  }
+  stop() {
+    try { this.src.onended = null; this.src.stop(); } catch (e) { /* already stopped */ }
+    try { this.ctx.close(); } catch (e) { /* already closed */ }
+    this.analyser = null;
+  }
+}
+
 function downsample(x, from, to) {
   if (from === to) return x;
   const ratio = from / to;

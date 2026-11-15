@@ -8,9 +8,11 @@ People after a stroke, with Parkinson's, ALS or cerebral palsy often have **dysa
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/TomasZitko/slysim-te/blob/main/notebooks/slysim_te.ipynb) [**Open the analysis in Google Colab**](https://colab.research.google.com/github/TomasZitko/slysim-te/blob/main/notebooks/slysim_te.ipynb) · [One-page write-up](docs/writeup.md) · [Research and sources](docs/research.md)
 
-![Utter screens: home, teach a meaning, a recognised word, "not sure", and the proof tab](docs/img/app_screens.png)
+![Utter running live on a real recording: the app in the middle, the live test on the left, the model internals on the right](docs/img/utter_live.png)
 
-*Real app screens. For the middle two, the app was taught 5 words with 3 TORGO recordings each from speaker M05 (moderate-severe dysarthria). Each was then given a recording it had never heard. In the first, "yes" is recognised. In the second, the recording was "tear", Utter's best guess was wrong, and so it said "Not sure" instead of acting.*
+*A real screenshot, not a mock-up. Left: **Real voices**, a live test on a real person with severe dysarthria from TORGO (speaker M02). The app was taught 8 of his words from 2 of his own recordings each and is now hearing recordings it has never heard; a regular assistant (Whisper) gets the same ones. Middle: the app. Right: the **Engine** panel shows what the model did with this recording: the frames it became, the time-warped alignment with the closest stored recording, the distance to every word, and the lead it needs before it acts. The score on the left is counted live, including the mistakes.*
+
+![App screens](docs/img/utter_screens.png)
 
 ## Results
 
@@ -27,9 +29,7 @@ Tested on real recordings of **7 people with dysarthria** from the TORGO databas
 - **The biggest gains are for the hardest-to-understand speakers.** For two people with severe dysarthria, Whisper got 20% of words and Utter 87%. For the person Whisper understood least, it got 12% of words and Utter 68%.
 - **Sanity checks.** Whisper understands 73% of words from speakers *without* dysarthria, so the baseline works and the gap really comes from the speech. With shuffled labels, Utter drops to 10%, close to chance.
 
-![Accuracy for each person with dysarthria](outputs/1_per_speaker.png)
-
-More charts: [how many recordings are enough](outputs/2_recordings_needed.png), [the "not sure" state](outputs/3_not_sure.png). All numbers come from [`outputs/results.json`](outputs/results.json), written by the notebook. A fresh *Run all* in Google Colab (15 Nov 2026) reproduced every number in it exactly.
+Charts: [each person](outputs/1_per_speaker.png), [how many recordings are enough](outputs/2_recordings_needed.png), [the "not sure" state](outputs/3_not_sure.png); the app draws the same charts live from `results.json` in its Proof tab. All numbers come from [`outputs/results.json`](outputs/results.json), written by the notebook. A fresh *Run all* in Google Colab (15 Nov 2026) reproduced every number in it exactly.
 
 **Honest note.** For common English words, other people's recordings already help a lot (79%), more than 2 of the person's own (74%). Combining the two is best. Personal recordings matter where other people's fail. For F01, the speaker Whisper understood least (8%; F01 is only in the 1-recording test, see the notebook), one own recording per word beat other people's recordings (73% vs. 55%). They also matter where nobody else's recordings exist: sounds a person invents for themselves, like "wah-uh" for *water*. In that personal-only mode with "not sure" on, Utter acts correctly 54% of the time, asks again 41% of the time, and is wrong 5% of the time.
 
@@ -46,6 +46,10 @@ More charts: [how many recordings are enough](outputs/2_recordings_needed.png), 
 | **Mean** | | **77%** | **54%** | **5%** |
 
 Chance is 20%. This is a small test (50–78 recordings per person), but it checks the whole app path: WAV upload, trimming, WavLM, DTW and the "not sure" threshold. Raw results: `experiments/app_end_to_end_results.csv`.
+
+### The app's screens, tested with a fake microphone
+
+[`experiments/ui_selftest.js`](experiments/ui_selftest.js) drives the real app in the browser and replaces the microphone with real recordings. It teaches a word with three recordings, checks that recording stops by itself, says the word, confirms it, checks the spoken sentence, the log, editing, removing a recording, Czech, the settings and the guide, and then forgets the temporary word. On 15 Nov 2026 all 24 checks passed.
 
 ## How it works
 
@@ -104,14 +108,30 @@ Scripts: [`experiments/phase2_dtw.py`](experiments/phase2_dtw.py), [`experiments
   ```
   Outputs go to `outputs/` (`results.json`, charts, example recordings), data and caches to `data/`.
 
-### The app (Utter)
-Requires `outputs/results.json` from the notebook.
+### The app
+Requires `outputs/results.json` from the notebook (it is in the repository).
 ```bash
 .venv\Scripts\python -m uvicorn app.server:app --port 8000
 ```
 Open http://localhost:8000 and allow the microphone. Everything runs on your computer: the browser records 16 kHz WAV directly (no ffmpeg needed) and the server runs WavLM (and Whisper, to show what a regular assistant would hear). Taught words are saved in `data/app_state/`. Browsers allow the microphone only on `localhost` or HTTPS, so to try it on a phone, open it through an HTTPS tunnel or deploy it with HTTPS.
 
-Screens: **Speak** (listen → guess → confirm → Utter says the sentence), **My words**, **Teach** (pick a meaning, record 3×), and **Proof** (results on TORGO, real examples where Whisper failed). Nothing is spoken until the person confirms. Bad recordings can be removed in the word's detail (they're moved to an archive folder, not deleted). For switch users, the **Space** key starts and stops listening and recording. Design: [`design/Utter App.dc.html`](design/).
+**What is in the app**
+
+- **Speak**: tap once (or press Space), say your sound, and listening stops by itself when you stop. Utter shows its guess and what a regular assistant heard; nothing is spoken until you confirm. Then it says the full sentence aloud on a screen you can flip towards the listener.
+- **Not sure**: when the best word is not clearly ahead, Utter asks again instead of acting. In Settings you choose how careful it should be (Careful / Balanced / Quick); Balanced is the threshold measured in the notebook.
+- **Tap to say**: every taught word is also one tap away, for the days when the voice doesn't work. **Yes / No / Help** are always there; Help also sounds an alarm.
+- **Words**: your personal language. For each word: what a regular assistant hears in it, how often Utter recognises it in a self-test, every recording (play, remove), and the sentence it says (editable).
+- **Teach**: pick a meaning or type your own, record it 3 times. It doesn't have to be a word.
+- **Today**: a log of everything said, with the time, for family and carers.
+- **Proof**: the measured results, drawn live from `outputs/results.json`, and real recordings to listen to.
+- **Guide**: on first start Blub explains the app in five short steps; it can be reopened from the profile.
+- **Profile and settings**: name, language of the app and the voice (**English and Czech**; recognition itself has no language, it matches sounds), the voice and its speed, how careful Utter is, stop by itself, ask before speaking, learn from confirmed guesses, and a still mode without motion.
+- **Blub**, the mascot and logo, shows what the app is doing: listening (the mouth follows the real loudness), thinking, happy, not sure, and asleep when nothing happens.
+- **Engine panel** (desktop): for every recording, the real internals of the decision: frames, DTW alignment, distance to each word, lead vs. threshold, and the time it took (about 0.1–0.3 s on a small laptop GPU).
+- **Real voices** (desktop): the live test described above. It needs the TORGO recordings locally; build the pack once with `python experiments/build_demo_pack.py` (after the notebook has downloaded the data to `data/raw/`). It mirrors the notebook's own-recordings-only setting: 8 words, 2 own recordings per word, tested on that person's other recordings. Without the pack the rest of the app works the same.
+- **Switch access**: the Space key starts and stops listening and recording. Bad recordings and forgotten words are moved to an archive folder, never deleted.
+
+The design (Blub the mascot, who is also the logo; Familjen Grotesk + Instrument Sans; Phosphor icons) is in [`design/`](design/). Its tokens live in `app/static/tokens.css`, Blub in `brand.js`.
 
 ## Limits
 
@@ -131,9 +151,11 @@ Czech (and other languages: the method doesn't depend on language), tests with r
 notebooks/slysim_te.ipynb   analysis, saved with outputs
 outputs/                    results.json and charts
 app/server.py               FastAPI backend
-app/static/                 frontend (plain HTML/CSS/JS), design tokens in tokens.css
+app/static/                 frontend (plain HTML/CSS/JS): app.js (phone app), engine.js (model panel),
+                            lab.js (Real voices), charts.js, brand.js + tokens.css (design language)
 design/                     app design
-experiments/                method comparison on speakers without dysarthria, app end-to-end test
+experiments/                method comparison on speakers without dysarthria, app end-to-end test,
+                            build_demo_pack.py (recordings for Real voices)
 docs/                       write-up, research with sources, video script, screenshots
 ```
 

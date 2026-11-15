@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<style>
+body{margin:0;background:#0E0D0C;font-family:'Instrument Sans',system-ui,sans-serif;color:#F3EBDD;-webkit-font-smoothing:antialiased}
+a{color:#FFC93C}a:hover{color:#F8A4D2}
+*::-webkit-scrollbar{display:none}
+button,input{font-family:inherit}
+button:focus-visible,input:focus-visible{outline:3px solid #FFC93C;outline-offset:3px}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:72px;padding:48px 32px;box-sizing:border-box">
+
+  <div style="max-width:340px;display:flex;flex-direction:column;gap:28px">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div style="width:88px;height:88px;flex:none">{{ logoMark }}</div>
+      <span style="font-family:'Familjen Grotesk',sans-serif;font-weight:700;font-size:68px;letter-spacing:-0.05em;line-height:1;color:#F3EBDD">utter</span>
+    </div>
+    <p style="margin:0;font-size:17px;line-height:1.5;color:#B5AC9E;text-wrap:pretty">A personal language for people whose speech changed after a stroke or injury. Record a sound five times, tell Utter what it means, and it speaks the full sentence for you.</p>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <span style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#B5AC9E">Meet Blub, the mascot</span>
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+        <sc-for list="{{ moods }}" as="m" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px"><div aria-hidden="true" style="width:68px;height:68px">{{ m.el }}</div><span style="font-size:13px;color:#B5AC9E">{{ m.label }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="height:1.5px;background:rgba(243,235,221,.18)"></div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#B5AC9E">Jump to screen</span>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <sc-for list="{{ jumps }}" as="j" hint-placeholder-count="7">
+          <button onClick="{{ j.go }}" style="height:40px;padding:0 16px;border-radius:20px;white-space:nowrap;border:1.5px solid rgba(243,235,221,.28);background:transparent;color:#F3EBDD;font-size:14px;font-weight:500;cursor:pointer" style-hover="background:rgba(243,235,221,.08)">{{ j.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="height:1.5px;background:rgba(243,235,221,.18)"></div>
+    <div style="display:flex;flex-direction:column;gap:12px;font-size:15px;line-height:1.4;color:#B5AC9E">
+      <div style="display:flex;gap:12px;align-items:flex-start"><i class="ph-bold ph-hand-tap" style="font-size:20px;color:#FFC93C"></i><span>Tap once, never hold. Recording stops by itself.</span></div>
+      <div style="display:flex;gap:12px;align-items:flex-start"><i class="ph-bold ph-check-circle" style="font-size:20px;color:#FFC93C"></i><span>Nothing is spoken until the user confirms the guess.</span></div>
+      <div style="display:flex;gap:12px;align-items:flex-start"><i class="ph-bold ph-lifebuoy" style="font-size:20px;color:#FFC93C"></i><span>Yes, No and Help are always one tap away.</span></div>
+      <div style="display:flex;gap:12px;align-items:flex-start"><i class="ph-bold ph-text-aa" style="font-size:20px;color:#FFC93C"></i><span>Text 16px and up, targets 56px and up, 4.5:1 contrast.</span></div>
+    </div>
+  </div>
+
+  <div style="padding:12px;border-radius:66px;background:#050505;box-shadow:0 0 0 1.5px #2a2826,0 40px 80px rgba(0,0,0,.6);flex:none">
+    <div style="position:relative;width:390px;height:844px;border-radius:54px;overflow:hidden;background:#181716">
+
+      <sc-if value="{{ showHero }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;left:0;right:0;top:0;height:372px;background:{{ heroPale }};border-radius:0 0 44px 44px;overflow:hidden;transition:background .6s ease">
+          <div aria-hidden="true" style="position:absolute;width:500px;height:500px;left:50%;top:118px;margin-left:-250px;transform:scale({{ pulse }});transform-origin:50% 25%;transition:transform .12s linear">{{ heroMascot }}</div>
+          <button onClick="{{ heroTap }}" aria-label="{{ heroTapLabel }}" style="position:absolute;left:50%;top:150px;margin-left:-120px;width:240px;height:210px;background:transparent;border:0;cursor:pointer;display:flex;align-items:flex-start;justify-content:center;padding:44px 0 0">
+            </button>
+          <sc-if value="{{ showBadge }}">
+            <div style="position:absolute;top:150px;right:58px;width:60px;height:60px;border-radius:50%;background:#F3EBDD;border:2px solid #141414;display:flex;align-items:center;justify-content:center;transform:rotate(8deg)"><i class="ph-bold ph-{{ heroIcon }}" style="font-size:30px;color:#141414"></i></div>
+          </sc-if>
+          <div style="position:absolute;top:60px;left:22px;right:22px;display:flex;justify-content:space-between;align-items:center">
+            <sc-if value="{{ heroLeftShow }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ heroLeft }}" aria-label="{{ heroLeftLabel }}" style="width:52px;height:52px;border-radius:50%;border:1.5px solid #141414;background:transparent;color:#141414;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;font-weight:600" style-hover="background:rgba(20,20,20,.08)">
+                <sc-if value="{{ heroLeftIsText }}"><span>{{ heroLeftText }}</span></sc-if>
+                <sc-if value="{{ heroLeftIsIcon }}" hint-placeholder-val="{{ true }}"><i class="ph-bold ph-{{ heroLeftIcon }}" style="font-size:22px"></i></sc-if>
+              </button>
+            </sc-if>
+            <sc-if value="{{ isHome }}"><span style="font-family:'Familjen Grotesk',sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.05em;color:#141414">utter</span></sc-if>
+            <sc-if value="{{ heroRightShow }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ heroRight }}" style="height:52px;padding:0 20px;border-radius:26px;border:1.5px solid #141414;background:transparent;color:#141414;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:16px;font-weight:600;white-space:nowrap" style-hover="background:rgba(20,20,20,.08)"><i class="ph-bold ph-{{ heroRightIcon }}" style="font-size:20px"></i>{{ heroRightLabel }}</button>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <div style="position:absolute;left:0;right:0;top:372px;bottom:92px;padding:26px 24px 0;display:flex;flex-direction:column;gap:18px">
+          <h1 style="margin:0;text-align:center;font-family:'Familjen Grotesk',sans-serif;font-weight:500;letter-spacing:-0.03em;font-size:40px;line-height:1.02;color:#F3EBDD">Hi Marek.<br>What do you need?</h1>
+          <button onClick="{{ startListen }}" style="height:72px;border-radius:36px;border:0;background:#FFC93C;color:#141414;font-size:20px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer" style-active="transform:scale(.98)"><i class="ph-fill ph-microphone" style="font-size:26px"></i>Start listening</button>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+            <button onClick="{{ sayYes }}" style="height:60px;border-radius:20px;border:1.5px solid rgba(243,235,221,.32);background:transparent;color:#F3EBDD;font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer" style-hover="background:rgba(243,235,221,.06)"><i class="ph-bold ph-check" style="font-size:22px"></i>Yes</button>
+            <button onClick="{{ sayNo }}" style="height:60px;border-radius:20px;border:1.5px solid rgba(243,235,221,.32);background:transparent;color:#F3EBDD;font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer" style-hover="background:rgba(243,235,221,.06)"><i class="ph-bold ph-x" style="font-size:22px"></i>No</button>
+            <button onClick="{{ sayHelp }}" style="height:60px;border-radius:20px;border:0;background:#F4583E;color:#141414;font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer"><i class="ph-bold ph-hand-palm" style="font-size:22px"></i>Help</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isListen }}">
+        <div style="position:absolute;left:0;right:0;top:372px;bottom:0;padding:30px 24px 40px;display:flex;flex-direction:column;align-items:center;gap:14px">
+          <h1 style="margin:0;font-family:'Familjen Grotesk',sans-serif;font-weight:500;letter-spacing:-0.03em;font-size:46px;line-height:1;color:#F3EBDD">Listening…</h1>
+          <p style="margin:0;font-size:17px;color:#B5AC9E">Take your time. Say it your way.</p>
+          <div aria-hidden="true" style="height:110px;display:flex;align-items:center;gap:4px;margin-top:6px">
+            <sc-for list="{{ bars }}" as="b" hint-placeholder-count="41"><div style="width:4px;border-radius:2px;height:{{ b.h }}px;background:{{ b.c }};transition:height .1s linear"></div></sc-for>
+          </div>
+          <button onClick="{{ finishListen }}" style="margin-top:auto;width:100%;height:72px;border-radius:36px;border:1.5px solid rgba(243,235,221,.32);background:transparent;color:#F3EBDD;font-size:20px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer"><i class="ph-fill ph-stop-circle" style="font-size:26px;color:#F4583E"></i>I'm done</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isResult }}">
+        <div style="position:absolute;left:0;right:0;top:372px;bottom:0;padding:22px 0 34px;display:flex;flex-direction:column;align-items:center;gap:12px">
+          <h1 style="margin:0;font-family:'Familjen Grotesk',sans-serif;font-weight:500;letter-spacing:-0.03em;font-size:54px;line-height:1;color:#F3EBDD">{{ guess.label }}?</h1>
+          <p style="margin:0;font-size:16px;color:#B5AC9E">Sounded like <span style="font-family:'Familjen Grotesk',sans-serif;letter-spacing:-0.02em;font-style:italic;font-size:19px;color:#F3EBDD">“{{ guess.sound }}”</span> · {{ guess.pct }}% sure</p>
+          <div aria-hidden="true" style="height:56px;display:flex;align-items:center;gap:4px">
+            <sc-for list="{{ barsSmall }}" as="b" hint-placeholder-count="41"><div style="width:4px;border-radius:2px;height:{{ b.h }}px;background:{{ b.c }}"></div></sc-for>
+          </div>
+          <div role="radiogroup" aria-label="Other guesses" style="display:flex;gap:10px;overflow-x:auto;width:100%;padding:0 24px;box-sizing:border-box;justify-content:center">
+            <sc-for list="{{ guesses }}" as="g" hint-placeholder-count="3">
+              <sc-if value="{{ g.sel }}">
+                <button role="radio" aria-checked="true" onClick="{{ g.pick }}" style="flex:none;height:52px;padding:0 20px;border-radius:26px;border:0;white-space:nowrap;background:#FFC93C;color:#141414;font-size:16px;font-weight:600;display:flex;align-items:center;gap:8px;cursor:pointer"><i class="ph-bold ph-{{ g.icon }}" style="font-size:18px"></i>{{ g.label }}</button>
+              </sc-if>
+              <sc-if value="{{ g.unsel }}">
+                <button role="radio" aria-checked="false" onClick="{{ g.pick }}" style="flex:none;height:52px;padding:0 20px;border-radius:26px;white-space:nowrap;border:1.5px solid rgba(243,235,221,.28);background:transparent;color:#F3EBDD;font-size:16px;font-weight:500;display:flex;align-items:center;gap:8px;cursor:pointer"><i class="ph-bold ph-{{ g.icon }}" style="font-size:18px"></i>{{ g.label }} <span style="color:#B5AC9E">{{ g.pct }}%</span></button>
+              </sc-if>
+            </sc-for>
+          </div>
+          <div style="margin-top:auto;width:100%;padding:0 24px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px">
+            <button onClick="{{ confirm }}" style="height:72px;border-radius:36px;border:0;background:#F3EBDD;color:#141414;font-size:20px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer" style-active="transform:scale(.98)"><i class="ph-fill ph-speaker-high" style="font-size:26px"></i>Yes, say it</button>
+            <button onClick="{{ goTeach }}" style="height:56px;border-radius:28px;border:0;background:transparent;color:#F3EBDD;font-size:17px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;text-decoration:underline;text-underline-offset:4px"><i class="ph-bold ph-plus-circle" style="font-size:20px"></i>None of these, teach it</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSpeak }}">
+        <div style="position:absolute;inset:0;background:{{ speakItem.main }};padding:60px 24px 40px;display:flex;flex-direction:column;transition:background .4s">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <button onClick="{{ goHome }}" aria-label="Close" style="width:52px;height:52px;border-radius:50%;border:1.5px solid #141414;background:transparent;color:#141414;display:flex;align-items:center;justify-content:center;cursor:pointer"><i class="ph-bold ph-x" style="font-size:22px"></i></button>
+            <button onClick="{{ flip }}" style="height:52px;padding:0 20px;border-radius:26px;border:1.5px solid #141414;background:transparent;color:#141414;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:16px;font-weight:600;white-space:nowrap"><i class="ph-bold ph-arrows-clockwise" style="font-size:20px"></i>Flip</button>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px;transform:rotate({{ flipDeg }}deg);transition:transform .5s cubic-bezier(.5,0,.2,1)">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:56px;height:56px;border-radius:50%;border:2px solid #141414;display:flex;align-items:center;justify-content:center"><i class="ph-bold ph-{{ speakItem.icon }}" style="font-size:28px;color:#141414"></i></div>
+              <span style="font-size:15px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#141414">Marek says</span>
+            </div>
+            <p style="margin:0;font-family:'Familjen Grotesk',sans-serif;letter-spacing:-0.02em;font-size:54px;line-height:1.02;color:#141414;text-wrap:balance">{{ speakItem.phrase }}</p>
+            <div style="height:2px;background:#141414"></div>
+            <span style="font-size:16px;color:#141414">Recognised from “{{ speakItem.sound }}”</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <button onClick="{{ sayAgain }}" style="height:72px;border-radius:36px;border:0;background:#141414;color:#F3EBDD;font-size:20px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer"><i class="ph-fill ph-speaker-high" style="font-size:26px"></i>Say it again</button>
+            <button onClick="{{ goHome }}" style="height:60px;border-radius:30px;border:1.5px solid #141414;background:transparent;color:#141414;font-size:18px;font-weight:600;cursor:pointer">Done</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isWords }}">
+        <div style="position:absolute;left:0;right:0;top:0;bottom:92px;overflow-y:auto;padding:70px 20px 24px;box-sizing:border-box">
+          <div style="padding:0 4px 20px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <h1 style="margin:0;font-family:'Familjen Grotesk',sans-serif;font-weight:500;letter-spacing:-0.03em;font-size:44px;line-height:1;color:#F3EBDD">My language<span style="font-family:'Instrument Sans',sans-serif;font-size:24px;color:#FFC93C;vertical-align:top">*</span></h1>
+              <span style="font-size:16px;color:#B5AC9E">{{ wordCount }} words · {{ totalTakes }} recordings</span>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+            <sc-for list="{{ wordCards }}" as="w" hint-placeholder-count="6">
+              <button onClick="{{ w.open }}" aria-label="{{ w.label }}, {{ w.conf }} percent confident" style="text-align:left;border:0;border-radius:28px;background:{{ w.main }};color:#141414;padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px;cursor:pointer;min-height:200px" style-active="transform:scale(.98)">
+                <div style="display:flex;justify-content:space-between;align-items:center;width:100%">
+                  <div style="position:relative;width:54px;height:54px;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 100 100" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%"><path d="{{ w.badge }}" fill="none" stroke="#141414" stroke-width="3.5"></path></svg><i class="ph-bold ph-{{ w.icon }}" style="font-size:24px;position:relative"></i></div>
+                  <span style="font-size:14px;font-weight:600">{{ w.takes }} rec</span>
+                </div>
+                <span style="font-family:'Familjen Grotesk',sans-serif;letter-spacing:-0.02em;font-size:28px;line-height:1;margin-top:auto">{{ w.label }}</span>
+                <div style="height:1.5px;background:#141414;width:100%"></div>
+                <span style="font-family:'Familjen Grotesk',sans-serif;letter-spacing:-0.02em;font-style:italic;font-size:18px">“{{ w.sound }}”</span>
+                <div style="display:flex;align-items:center;gap:8px;width:100%">
+                  <div style="flex:1;height:6px;border-radius:3px;background:rgba(20,20,20,.18);overflow:hidden"><div style="height:100%;width:{{ w.confW }};background:#141414;border-radius:3px"></div></div>
+                  <span style="font-size:13px;font-weight:600">{{ w.conf }}%</span>
+                </div>
+              </button>
+            </sc-for>
+            <button onClick="{{ goTeach }}" style="border:1.5px dashed rgba(243,235,221,.4);border-radius:28px;background:transparent;color:#F3EBDD;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;font-size:17px;font-weight:600"><i class="ph-bold ph-plus" style="font-size:32px"></i>Teach a word</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isDetail }}">
+        <div style="position:absolute;left:0;right:0;top:372px;bottom:0;overflow-y:auto;padding:24px 24px 40px;box-sizing:border-box;display:flex;flex-direction:column;gap:22px">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+            <h1 style="margin:0;font-family:'Familjen Grotesk',sans-serif;font-weight:500;letter-spacing:-0.03em;font-size:48px;line-height:1;color:#F3EBDD">{{ detail.label }}</h1>
+            <button onClick="{{ playSound }}" aria-label="Play your sound" style="height:56px;padding:0 18px 0 8px;border-radius:28px;border:1.5px solid rgba(243,235,221,.3);background:transparent;color:#F3EBDD;display:flex;align-items:center;gap:10px;cursor:pointer;flex:none">
+              <span style="width:40px;height:40px;border-radius:50%;background:#F3EBDD;color:#141414;display:flex;align-items:center;justify-content:center"><i class="ph-fill ph-{{ playIcon }}" style="font-size:18px"></i></span>
+              <span style="font-family:'Familjen Grotesk',sans-serif;letter-spacing:-0.02em;font-style:italic;font-size:20px;white-space:nowrap">“{{ detail.sound }}”</span>
+            </button>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#B5AC9E">Utter says</span>
+            <span style="font-family:'Familjen Grotesk',sans-serif;letter-spacing:-0.02em;font-size:26px;line-height:1.15;color:#F3EBDD">{{ detail.phrase }}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1.5px solid rgba(243,235,221,.18);border-bottom:1.5px solid rgba(243,235,221,.18)">
+            <div style="padding:16px 0;display:flex;flex-direction:column;gap:4px;border-right:1.5px solid rgba(243,235,221,.18)">
+              <span style="font-size:36px;font-weight:500;color:#F3EBDD">{{ detail.conf }}%</span><span style="font-size:15px;color:#B5AC9E">Recognition</span>
+            </div>
+            <div style="padding:16px 0 16px 20px;display:flex;flex-direction:column;gap:4px">
+              <span style="font-size:36px;font-weight:500;color:#F3EBDD">{{ detail.takes }}</span><span style="font-size:15px;color:#B5AC9E">Recordings</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <sc-for list="{{ detailTakes }}" as="t" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:14px;height:60px;border-bottom:1px solid rgba(243,235,221,.1)">
+                <span style="width:64px;font-size:15px;color:#B5AC9E">Take {{ t.n }}</span>
+                <div aria-hidden="true" style="flex:1;display:flex;align-items:center;gap:3px;height:32px">
+                  <sc-for list="{{ t.bars }}" as="m" hint-placeholder-count="24"><div style="width:3px;border-radius:2px;height:{{ m }}px;background:{{ detail.main }}"></div></sc-for>
+                </div>
+                <span style="font-size:14px;color:#B5AC9E">{{ t.when }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <button onClick="{{ sayDetail }}" style="height:72px;border-radius:36px;border:0;background:#F3EBDD;color:#141414;font-size:20px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer"><i class="ph-fill ph-speaker-high" style="font-size:26px"></i>Say it aloud</button>
+            <button onClick="{{ recordMore }}" style="height:60px;border-radius:30px;border:1.5px solid rgba(243,235,221,.32);background:transparent;color:#F3EBDD;font-size:18px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer"><i class="ph-bold ph-microphone" style="font-size:22px"></i>Record 5 more</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isTeach1 }}">
+        <div style="position:absolute;left:0;right:0;top:0;bottom:92px;overflow-y:auto;padding:70px 24px 24px;box-sizing:border-box;display:flex;flex-direction:column;gap:18px">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#FFC93C">Step 1 of 2</span>
+            <h1 style="margin:0;font-family:'Familjen Grotesk',sans-serif;font-weight:500;letter-spacing:-0.03em;font-size:42px;line-height:1.02;color:#F3EBDD">What should this sound mean?</h1>
+          </div>
+          <div role="radiogroup" aria-label="Meaning" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+            <sc-for list="{{ meanings }}" as="m" hint-placeholder-count="9">
+              <sc-if value="{{ m.sel }}">
+                <button role="radio" aria-checked="true" onClick="{{ m.pick }}" style="height:96px;border-radius:22px;border:0;background:{{ m.main }};color:#141414;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:16px;font-weight:600"><i class="ph-fill ph-{{ m.icon }}" style="font-size:32px"></i>{{ m.label }}</button>
+              </sc-if>
+              <sc-if value="{{ m.unsel }}">
+                <button role="radio" aria-checked="false" onClick="{{ m.pick }}" style="height:96px;border-radius:22px;border:1.5px solid rgba(243,235,221,.18);background:#232220;color:#F3EBDD;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:16px;font-weight:500" style-hover="background:#2b2a27"><i class="ph-bold ph-{{ m.icon }}" style="font-size:30px"></i>{{ m.label }}</button>
+              </sc-if>
+            </sc-for>
+          </div>
+          <label style="display:flex;align-items:center;gap:12px;height:60px;padding:0 18px;border-radius:20px;border:1.5px solid rgba(243,235,221,.28);background:transparent">
+            <i class="ph-bold ph-pencil-simple" style="font-size:22px;color:#B5AC9E"></i>
+            <input value="{{ customText }}" onChange="{{ onCustom }}" placeholder="Or type your own word" aria-label="Your own word" style="flex:1;min-width:0;height:100%;border:0;background:transparent;color:#F3EBDD;font-size:18px;outline:none">
+          </label>
+          <sc-if value="{{ canContinue }}">
+            <button onClick="{{ teachContinue }}" style="height:72px;flex:none;border-radius:36px;border:0;background:#FFC93C;color:#141414;font-size:20px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer">Record “{{ teachLabel }}”<i class="ph-bold ph-arrow-right" style="font-size:22px"></i></button>
+          </sc-if>
+          <sc-if value="{{ cantContinue }}" hint-placeholder-val="{{ true }}">
+            <div style="height:72px;flex:none;border-radius:36px;background:#232220;color:#B5AC9E;font-size:18px;font-weight:500;display:flex;align-items:center;justify-content:center">Pick a meaning to continue</div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isTeach2 }}">
+        <div style="position:absolute;left:0;right:0;top:372px;bottom:0;padding:22px 24px 30px;display:flex;flex-direction:column;align-items:center;gap:12px">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="display:flex;gap:8px" aria-hidden="true">
+              <sc-for list="{{ dots }}" as="d" hint-placeholder-count="5">
+                <sc-if value="{{ d.done }}"><div style="width:18px;height:18px;border-radius:50%;background:{{ teachMain }};display:flex;align-items:center;justify-content:center"><i class="ph-bold ph-check" style="font-size:11px;color:#141414"></i></div></sc-if>
+                <sc-if value="{{ d.todo }}"><div style="width:18px;height:18px;border-radius:50%;border:1.5px solid rgba(243,235,221,.4);box-sizing:border-box"></div></sc-if>
+              </sc-for>
+            </div>
+            <span style="font-size:16px;font-weight:600;color:#F3EBDD">{{ takeLabel }}</span>
+          </div>
+          <h1 style="margin:0;text-align:center;font-family:'Familjen Grotesk',sans-serif;font-weight:500;letter-spacing:-0.03em;font-size:40px;line-height:1.02;color:#F3EBDD">Say “{{ teachLabel }}”<br>your way</h1>
+          <div aria-hidden="true" style="height:64px;display:flex;align-items:center;gap:4px">
+            <sc-for list="{{ bars }}" as="b" hint-placeholder-count="41"><div style="width:4px;border-radius:2px;height:{{ b.hh }}px;background:{{ b.c }};transition:height .1s linear"></div></sc-for>
+          </div>
+          <button onClick="{{ record }}" aria-label="{{ recordAria }}" style="width:100px;height:100px;flex:none;border-radius:50%;border:4px solid #181716;box-shadow:0 0 0 3px {{ recRing }};background:#F4583E;color:#141414;display:flex;align-items:center;justify-content:center;cursor:pointer;transform:scale({{ pulse }});transition:transform .12s linear,box-shadow .3s"><i class="ph-fill ph-{{ recIcon }}" style="font-size:42px"></i></button>
+          <span style="font-size:16px;color:#B5AC9E;text-align:center">{{ recHint }}</span>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isTeach3 }}">
+        <div style="position:absolute;left:0;right:0;top:372px;bottom:0;padding:28px 24px 40px;display:flex;flex-direction:column;align-items:center;gap:14px">
+          <h1 style="margin:0;text-align:center;font-family:'Familjen Grotesk',sans-serif;font-weight:500;letter-spacing:-0.03em;font-size:42px;line-height:1.02;color:#F3EBDD">“{{ teachLabel }}” is now<br>part of your language</h1>
+          <p style="margin:0;text-align:center;font-size:17px;line-height:1.45;color:#B5AC9E;max-width:300px">5 recordings saved. Utter gets better every time you confirm a guess.</p>
+          <div style="margin-top:auto;width:100%;display:flex;flex-direction:column;gap:10px">
+            <button onClick="{{ startListen }}" style="height:72px;border-radius:36px;border:0;background:#FFC93C;color:#141414;font-size:20px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer"><i class="ph-fill ph-microphone" style="font-size:26px"></i>Try it now</button>
+            <button onClick="{{ goWords }}" style="height:60px;border-radius:30px;border:1.5px solid rgba(243,235,221,.32);background:transparent;color:#F3EBDD;font-size:18px;font-weight:600;cursor:pointer">See my language</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}">
+        <nav style="position:absolute;left:0;right:0;bottom:0;height:92px;background:#181716;border-top:1.5px solid rgba(243,235,221,.12);display:grid;grid-template-columns:repeat(3,1fr);padding:8px 12px 22px;box-sizing:border-box">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.go }}" aria-current="{{ t.current }}" style="background:transparent;border:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:#F3EBDD">
+              <sc-if value="{{ t.on }}"><span style="width:64px;height:34px;border-radius:17px;background:#F3EBDD;color:#141414;display:flex;align-items:center;justify-content:center"><i class="ph-fill ph-{{ t.icon }}" style="font-size:22px"></i></span></sc-if>
+              <sc-if value="{{ t.off }}"><span style="width:64px;height:34px;display:flex;align-items:center;justify-content:center;color:#B5AC9E"><i class="ph-bold ph-{{ t.icon }}" style="font-size:22px"></i></span></sc-if>
+              <span style="font-size:14px;font-weight:600">{{ t.label }}</span>
+            </button>
+          </sc-for>
+        </nav>
+      </sc-if>
+
+      <div style="position:absolute;top:0;left:0;right:0;height:54px;padding:0 32px 0 38px;display:flex;align-items:center;justify-content:space-between;color:{{ statusColor }};z-index:10;pointer-events:none;font-size:16px;font-weight:600">
+        <span>9:41</span>
+        <span style="display:flex;gap:6px;align-items:center;font-size:17px"><i class="ph-fill ph-cell-signal-full"></i><i class="ph-bold ph-wifi-high"></i><i class="ph-fill ph-battery-full" style="font-size:22px"></i></span>
+      </div>
+      <div style="position:absolute;top:11px;left:50%;margin-left:-62px;width:124px;height:36px;border-radius:18px;background:#050505;z-index:11"></div>
+      <div style="position:absolute;bottom:8px;left:50%;margin-left:-67px;width:134px;height:5px;border-radius:3px;background:{{ statusColor }};z-index:11"></div>
+
+      <sc-if value="{{ toast }}">
+        <div role="status" style="position:absolute;left:24px;right:24px;top:62px;z-index:12;height:56px;border-radius:28px;background:#141414;color:#F3EBDD;display:flex;align-items:center;gap:10px;padding:0 20px;font-size:16px;font-weight:500;box-shadow:0 10px 30px rgba(0,0,0,.4)"><i class="ph-fill ph-speaker-high" style="font-size:22px;color:#FFC93C"></i>{{ toast }}</div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;autoSpeak&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behaviour&quot;},&quot;reduceMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Accessibility&quot;},&quot;listenSeconds&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:3.5,&quot;min&quot;:1.5,&quot;max&quot;:8,&quot;step&quot;:0.5,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Behaviour&quot;}}">
+const MEANINGS = [
+  {label:'Food',icon:'fork-knife',main:'#FF9E5E',pale:'#FFDCC2',phrase:"I'm hungry. Can I eat something?"},
+  {label:'Walk',icon:'person-simple-walk',main:'#8FD9B0',pale:'#D5F2E2',phrase:'Can we go for a walk?'},
+  {label:'TV',icon:'television-simple',main:'#9A88FF',pale:'#DDD6FF',phrase:'Can you turn on the TV?'},
+  {label:'Hot',icon:'thermometer-hot',main:'#F4583E',pale:'#FFC3B5',phrase:"I'm too hot."},
+  {label:'Family',icon:'users-three',main:'#F8A4D2',pale:'#FFE0F1',phrase:'I want to see my family.'},
+  {label:'Medicine',icon:'pill',main:'#4C7DFF',pale:'#C9D8FF',phrase:'I need my medicine.'},
+  {label:'Phone',icon:'phone',main:'#FFC93C',pale:'#FBEBB0',phrase:'Can you pass me my phone?'},
+  {label:'Outside',icon:'tree',main:'#8FD3FF',pale:'#D9F0FF',phrase:"I'd like to go outside."},
+  {label:'Music',icon:'music-notes',main:'#C9A4FF',pale:'#EBDDFF',phrase:'Can you put some music on?'}
+];
+const WORDS = [
+  {id:'water',label:'Water',sound:'wah-uh',phrase:'Can I have some water, please?',icon:'drop',main:'#4C7DFF',pale:'#C9D8FF',takes:6,conf:92},
+  {id:'pain',label:'Pain',sound:'ow-eh',phrase:'Something hurts. I am in pain.',icon:'lightning',main:'#F4583E',pale:'#FFC3B5',takes:8,conf:89},
+  {id:'love',label:'Love you',sound:'uh-oo',phrase:'I love you.',icon:'heart',main:'#F8A4D2',pale:'#FFE0F1',takes:11,conf:96},
+  {id:'bath',label:'Bathroom',sound:'ba-ba',phrase:'I need to use the bathroom.',icon:'toilet',main:'#9A88FF',pale:'#DDD6FF',takes:5,conf:81},
+  {id:'tired',label:'Tired',sound:'hhh-ai',phrase:"I'm tired. I'd like to rest.",icon:'moon',main:'#FFC93C',pale:'#FBEBB0',takes:7,conf:86},
+  {id:'coffee',label:'Coffee',sound:'ka-ee',phrase:'Could I have a coffee?',icon:'coffee',main:'#FF9E5E',pale:'#FFDCC2',takes:5,conf:74},
+  {id:'cold',label:'Cold',sound:'oh-d',phrase:"I'm cold. Can I have a blanket?",icon:'snowflake',main:'#8FD3FF',pale:'#D9F0FF',takes:5,conf:78}
+];
+const SOUNDS = ['mm-ah','ta-ta','oo-wa','eh-ma','ah-oh','nn-ee'];
+const N = 41;
+function makeBars(amp){
+  return Array.from({length:N},(_,i)=>{
+    const d = Math.abs(i-20)/20, env = 1-d*0.7;
+    let h = amp ? Math.max(6,(14+Math.random()*80*amp)*env) : 8+(1-d)*22*(0.55+0.45*Math.abs(Math.sin(i*1.3)));
+    if (i===20) h = amp ? 100 : 44;
+    h = Math.round(h);
+    return {h, hh: Math.round(h*0.62), c: i===20 ? '#FFC93C' : 'rgba(243,235,221,.5)'};
+  });
+}
+function miniBars(seed){
+  return Array.from({length:24},(_,i)=>Math.round(5+Math.abs(Math.sin(seed*2.1+i*0.9)*Math.cos(i*0.37+seed))*24));
+}
+function blobPath(cx,cy,R,seed,amp,t,wob){
+  const n=36, pts=[], k=seed*1.7;
+  for(let i=0;i<n;i++){const th=i/n*Math.PI*2;
+    const r=R*(1+0.045*Math.sin(2*th+k)+0.025*Math.sin(3*th+k*2.3)
+      +wob*(0.022*Math.sin(2*th+t*0.9)+0.016*Math.sin(3*th-t*0.7)+0.01*Math.sin(4*th+t*1.2)));
+    pts.push([cx+r*1.04*Math.sin(th),cy-r*0.96*Math.cos(th)]);}
+  const f=p=>p[0].toFixed(1)+' '+p[1].toFixed(1);
+  let d='M'+f(pts[0]);
+  for(let i=0;i<n;i++){const p0=pts[(i-1+n)%n],p1=pts[i],p2=pts[(i+1)%n],p3=pts[(i+2)%n];
+    d+='C'+f([p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6])+' '+f([p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6])+' '+f(p2);}
+  return d+'Z';
+}
+function Mascot(p){
+  const e=React.createElement, path=React.useRef(), eL=React.useRef(), eR=React.useRef(), mo=React.useRef(), pr=React.useRef(p);
+  pr.current=p;
+  React.useEffect(()=>{
+    let raf, next=performance.now()+800+Math.random()*2500, bs=-1, dbl=false; const seed=Math.random()*10;
+    const loop=now=>{
+      const q=pr.current, still=!!q.still, t=now/1000+seed;
+      if(path.current) path.current.setAttribute('d',blobPath(250,250,q.R||220,q.lobes||7,q.amp??0.06,still?0:t*(q.speed||1),still?0:(q.wobble??1)));
+      let bl=1;
+      if(!still && q.mood!=='happy'){
+        if(now>next&&bs<0) bs=now;
+        if(bs>=0){const k=(now-bs)/170; if(k>=1){bs=-1; if(!dbl&&Math.random()<0.3){dbl=true;next=now+110;}else{dbl=false;next=now+2400+Math.random()*3400;}} else bl=Math.max(0.08,Math.abs(1-2*k));}
+      }
+      const lx=still?0:Math.sin(t*0.7)*4+Math.sin(t*0.23)*4, ly=still?0:Math.sin(t*0.5)*2.5;
+      const fy=q.faceY??250, s=q.faceScale||1, g=34*s;
+      if(eL.current) eL.current.setAttribute('transform',`translate(${250-g+lx},${fy+ly}) scale(${s},${s*bl})`);
+      if(eR.current) eR.current.setAttribute('transform',`translate(${250+g+lx},${fy+ly}) scale(${s},${s*bl})`);
+      const talk=(q.mood==='listen'||q.mood==='speak')&&!still ? 0.55+0.45*Math.abs(Math.sin(t*(q.mood==='speak'?6:3.5))) : 1;
+      if(mo.current) mo.current.setAttribute('transform',`translate(${250+lx*0.6},${fy+ly+30*s}) scale(${s},${s*talk})`);
+      raf=requestAnimationFrame(loop);
+    };
+    loop(performance.now()); return ()=>cancelAnimationFrame(raf);
+  },[]);
+  const ink='#141414', cream='#F3EBDD', m=p.mood||'idle', s0=p.faceScale||1, fy0=p.faceY??250;
+  const eye = m==='listen' ? [e('circle',{key:1,r:16,fill:cream,stroke:ink,strokeWidth:4}),e('circle',{key:2,cx:2,cy:-4,r:8,fill:ink})]
+    : m==='happy' ? [e('path',{key:1,d:'M-15 5 Q0 -14 15 5',stroke:ink,strokeWidth:6,fill:'none',strokeLinecap:'round'})]
+    : [e('ellipse',{key:1,rx:10,ry:13,fill:ink}),e('circle',{key:2,cx:3,cy:-5,r:3.5,fill:cream})];
+  const mouth = m==='listen' ? e('ellipse',{cx:0,cy:2,rx:8,ry:10,fill:ink})
+    : m==='speak' ? e('ellipse',{cx:0,cy:2,rx:13,ry:11,fill:ink})
+    : m==='happy' ? e('path',{d:'M-30 -8 L30 -8 Q26 22 0 22 Q-26 22 -30 -8Z',fill:ink})
+    : e('path',{d:'M-18 -4 Q0 12 18 -4',stroke:ink,strokeWidth:6,fill:'none',strokeLinecap:'round'});
+  return e('svg',{viewBox:'0 0 500 500',width:'100%',height:'100%',style:{overflow:'visible',display:'block'}},
+    e('path',{ref:path,d:blobPath(250,250,p.R||220,p.lobes||7,p.amp??0.06,0,0),style:{fill:p.color,transition:'fill .6s ease'}}),
+    e('g',{ref:eL,transform:`translate(${250-34*s0},${fy0}) scale(${s0})`},eye), e('g',{ref:eR,transform:`translate(${250+34*s0},${fy0}) scale(${s0})`},eye.map(x=>React.cloneElement(x))), e('g',{ref:mo,transform:`translate(250,${fy0+30*s0}) scale(${s0})`},mouth));
+}
+class Component extends DCLogic {
+  state = { screen:'home', words: WORDS, bars: makeBars(0), pulse:1, guesses:[], sel:0, speakItem:null, flipped:false,
+    detailId:'water', teachSel:null, customText:'', teachCount:0, recording:false, addTo:null, toast:null, playing:false };
+  componentWillUnmount(){ this.stop(); clearTimeout(this.toastT); }
+  stop(){ clearInterval(this.iv); clearTimeout(this.to); this.iv=null; }
+  motion(){ return !(this.props.reduceMotion ?? false); }
+  animate(amp){
+    this.stop();
+    if (!this.motion()) { this.setState({bars:makeBars(amp)}); return; }
+    this.iv = setInterval(()=>this.setState({bars:makeBars(amp), pulse:1+Math.random()*0.035}),110);
+  }
+  go(screen, extra){ this.stop(); this.setState({screen, flipped:false, pulse:1, recording:false, bars:makeBars(0), ...(extra||{})}); }
+  say(text){ try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.rate=0.92; speechSynthesis.speak(u);}catch(e){} }
+  showToast(t){ clearTimeout(this.toastT); this.setState({toast:t}); this.toastT=setTimeout(()=>this.setState({toast:null}),2200); }
+  startListen = () => {
+    this.go('listen'); this.animate(1);
+    this.to = setTimeout(this.finishListen, (this.props.listenSeconds ?? 3.5)*1000);
+  };
+  finishListen = () => {
+    this.stop();
+    const ws = this.state.words.slice().sort(()=>Math.random()-0.5);
+    const top = ws[0], p1 = Math.max(62, top.conf - Math.round(Math.random()*12));
+    const p2 = Math.round((100-p1)*0.65), p3 = 100-p1-p2;
+    this.setState({screen:'result', sel:0, pulse:1, bars:makeBars(0.5),
+      guesses:[{id:top.id,pct:p1},{id:ws[1].id,pct:p2},{id:ws[2].id,pct:p3}]});
+  };
+  speakWord(w, reinforce){
+    let words = this.state.words;
+    if (reinforce) words = words.map(x=>x.id===w.id?{...x,takes:x.takes+1,conf:Math.min(99,x.conf+1)}:x);
+    this.go('speak',{words, speakItem:{label:w.label,phrase:w.phrase,icon:w.icon,main:w.main,sound:w.sound}});
+    if (this.props.autoSpeak ?? true) this.say(w.phrase);
+  }
+  quick(label, phrase, icon, main){
+    this.go('speak',{speakItem:{label,phrase,icon,main,sound:'quick reply'}});
+    if (this.props.autoSpeak ?? true) this.say(phrase);
+  }
+  word(id){ return this.state.words.find(w=>w.id===id) || this.state.words[0]; }
+  teachMeta(){
+    const s = this.state;
+    if (s.addTo) { const w=this.word(s.addTo); return {label:w.label,main:w.main,pale:w.pale,icon:w.icon}; }
+    if (s.customText.trim()) return {label:s.customText.trim(),main:'#8FD9B0',pale:'#D5F2E2',icon:'chat-circle-dots',phrase:s.customText.trim()+'.'};
+    if (s.teachSel!=null) return MEANINGS[s.teachSel];
+    return null;
+  }
+  record = () => {
+    if (this.state.recording) { this.endTake(); return; }
+    this.setState({recording:true}); this.animate(0.9);
+    this.to = setTimeout(this.endTake, 2000);
+  };
+  endTake = () => {
+    this.stop();
+    const n = this.state.teachCount+1;
+    if (n < 5) { this.setState({recording:false, teachCount:n, pulse:1, bars:makeBars(0)}); return; }
+    const m = this.teachMeta(); let words = this.state.words;
+    if (this.state.addTo) words = words.map(x=>x.id===this.state.addTo?{...x,takes:x.takes+5,conf:Math.min(99,x.conf+4)}:x);
+    else words = [...words,{id:'w'+Date.now(),label:m.label,sound:SOUNDS[Math.floor(Math.random()*SOUNDS.length)],phrase:m.phrase,icon:m.icon,main:m.main,pale:m.pale,takes:5,conf:71}];
+    this.go('teach3',{words, teachCount:5});
+  };
+  renderVals(){
+    const s = this.state, sc = s.screen;
+    const tm = this.teachMeta(); const still = !!(this.props.reduceMotion ?? false);
+    const guess = s.guesses[s.sel] ? {...this.word(s.guesses[s.sel].id), pct:s.guesses[s.sel].pct} : this.word('water');
+    const detail = this.word(s.detailId);
+    const heroScreens = ['home','listen','result','teach2','teach3','detail'];
+    const showHero = heroScreens.includes(sc);
+    let heroPale='#FBEBB0', heroMain='#FFC93C', heroIcon='drop';
+    if (sc==='result'){ heroPale=guess.pale; heroMain=guess.main; heroIcon=guess.icon; }
+    if (sc==='detail'){ heroPale=detail.pale; heroMain=detail.main; heroIcon=detail.icon; }
+    if ((sc==='teach2'||sc==='teach3') && tm){ heroPale=tm.pale; heroMain=tm.main; heroIcon=tm.icon; }
+    if (sc==='listen'){ heroPale='#FFE0F1'; heroMain='#F8A4D2'; }
+    const face = sc==='listen'||(sc==='teach2'&&s.recording) ? 'listen' : (sc==='result'||sc==='teach3') ? 'happy' : sc==='detail' ? 'icon' : 'idle';
+    const hero = {
+      home:{l:'M',lt:true,ll:'Profile',lf:()=>{},r:'Words',ri:'book-open-text',rf:()=>this.go('words')},
+      listen:{l:'x',ll:'Cancel',lf:()=>this.go('home')},
+      result:{l:'arrow-left',ll:'Back',lf:()=>this.go('home'),r:'Again',ri:'arrow-counter-clockwise',rf:this.startListen},
+      teach2:{l:'arrow-left',ll:'Back',lf:()=>this.go(s.addTo?'detail':'teach1')},
+      teach3:{},
+      detail:{l:'arrow-left',ll:'Back',lf:()=>this.go('words'),r:'Edit',ri:'pencil-simple',rf:()=>{}}
+    }[sc] || {};
+    const nav = ['home','words','teach1'].includes(sc);
+    const tabs = [{k:'home',label:'Speak',icon:'waveform'},{k:'words',label:'My words',icon:'squares-four'},{k:'teach1',label:'Teach',icon:'plus-circle'}]
+      .map(t=>({...t,on:sc===t.k,off:sc!==t.k,current:sc===t.k?'page':undefined,go:()=>this.go(t.k,t.k==='teach1'?{teachSel:null,customText:'',addTo:null,teachCount:0}:{})}));
+    const statusDark = showHero || sc==='speak';
+    const jumpList = [['Home','home'],['Listening','listen'],['Guess','result'],['Speak out','speak'],['My words','words'],['Word detail','detail'],['Teach','teach1'],['Record','teach2'],['Learned','teach3']];
+    return {
+      jumps: jumpList.map(([label,k])=>({label,go:()=>{
+        if (k==='listen') return this.startListen();
+        if (k==='result') return this.finishListen();
+        if (k==='speak') return this.speakWord(this.word('water'),false);
+        if (k==='teach2'||k==='teach3') return this.go(k,{teachSel:s.teachSel??1,addTo:null,customText:'',teachCount:k==='teach3'?5:2});
+        this.go(k,k==='teach1'?{teachSel:null,customText:'',addTo:null}:{});
+      }})),
+      isHome:sc==='home', isListen:sc==='listen', isResult:sc==='result', isSpeak:sc==='speak', isWords:sc==='words',
+      isDetail:sc==='detail', isTeach1:sc==='teach1', isTeach2:sc==='teach2', isTeach3:sc==='teach3',
+      showHero, heroPale, heroMain, heroIcon, pulse:s.pulse,
+      faceIdle:face==='idle', faceListen:face==='listen', faceHappy:face==='happy', heroIconMode:face==='icon',
+      showBadge: sc==='result' || sc==='teach3' || sc==='detail',
+      heroTap: sc==='home'||sc==='teach3' ? this.startListen : sc==='listen' ? this.finishListen : sc==='teach2' ? this.record : ()=>{},
+      heroTapLabel: sc==='home' ? 'Start listening' : sc==='listen' ? 'Stop listening' : 'Character',
+      heroLeftShow:!!hero.l, heroLeftIsText:!!hero.lt, heroLeftIsIcon:!hero.lt, heroLeftText:hero.l, heroLeftIcon:hero.l, heroLeftLabel:hero.ll, heroLeft:hero.lf,
+      heroRightShow:!!hero.r, heroRightLabel:hero.r, heroRightIcon:hero.ri, heroRight:hero.rf,
+      statusColor: statusDark ? '#141414' : '#F3EBDD',
+      startListen:this.startListen, finishListen:this.finishListen,
+      sayYes:()=>this.quick('Yes','Yes.','check','#8FD9B0'),
+      sayNo:()=>this.quick('No','No.','x','#F8A4D2'),
+      sayHelp:()=>this.quick('Help','I need help, please come here.','hand-palm','#F4583E'),
+      bars:s.bars, barsSmall:s.bars.map(b=>({...b,h:Math.round(b.h*0.5)})),
+      guess, guesses:s.guesses.map((g,i)=>{const w=this.word(g.id);return {label:w.label,icon:w.icon,pct:g.pct,sel:i===s.sel,unsel:i!==s.sel,pick:()=>this.setState({sel:i})};}),
+      confirm:()=>this.speakWord(guess,true),
+      goTeach:()=>this.go('teach1',{teachSel:null,customText:'',addTo:null,teachCount:0}),
+      goHome:()=>{ try{speechSynthesis.cancel();}catch(e){} this.go('home'); },
+      goWords:()=>this.go('words'),
+      speakItem: s.speakItem || {phrase:'',icon:'drop',main:'#4C7DFF',sound:''},
+      flip:()=>this.setState({flipped:!s.flipped}), flipDeg: s.flipped?180:0,
+      sayAgain:()=>s.speakItem && this.say(s.speakItem.phrase),
+      wordCount:s.words.length, totalTakes:s.words.reduce((a,w)=>a+w.takes,0),
+      wordCards:s.words.map((w,i)=>({...w,badge:blobPath(50,50,40,5+i%4,0.09,0,0),confW:w.conf+'%',open:()=>this.go('detail',{detailId:w.id})})),
+      detail, detailTakes:Array.from({length:Math.min(detail.takes,5)},(_,i)=>({n:detail.takes-i,when:['Today','Today','Yesterday','Mon','Sun'][i],bars:miniBars(i+detail.label.length)})),
+      playIcon: s.playing?'pause':'play',
+      playSound:()=>{ this.setState({playing:true}); setTimeout(()=>this.setState({playing:false}),1400); },
+      sayDetail:()=>this.speakWord(detail,false),
+      recordMore:()=>this.go('teach2',{addTo:detail.id,teachCount:0}),
+      meanings:MEANINGS.map((m,i)=>({...m,sel:s.teachSel===i&&!s.customText,unsel:!(s.teachSel===i&&!s.customText),pick:()=>this.setState({teachSel:i,customText:''})})),
+      customText:s.customText, onCustom:e=>this.setState({customText:e.target.value}),
+      canContinue:!!tm, cantContinue:!tm, teachLabel: tm?tm.label:'', teachMain: tm?tm.main:'#FFC93C',
+      teachContinue:()=>this.go('teach2',{teachCount:0,addTo:null}),
+      dots:Array.from({length:5},(_,i)=>({done:i<s.teachCount,todo:i>=s.teachCount})),
+      takeLabel: s.teachCount>=5 ? 'All 5 done' : `Recording ${s.teachCount+1} of 5`,
+      record:this.record, recIcon: s.recording?'stop':'microphone',
+      recordAria: s.recording?'Stop recording':'Start recording',
+      recRing: s.recording?'#F4583E':'rgba(243,235,221,.3)',
+      recHint: s.recording ? 'Listening… it stops by itself.' : 'Tap once. No need to hold.',
+      showNav:nav, tabs, toast:s.toast,
+      heroMascot: React.createElement(Mascot,{color:heroMain,mood:face==='icon'?'idle':face,R:226,lobes:9,amp:(face==='listen')?0.05:0.032,speed:(face==='listen')?2.6:1,faceY:112,faceScale:1.05,still}),
+      logoMark: React.createElement(Mascot,{color:'#FFC93C',mood:'idle',R:205,lobes:7,amp:0.09,faceY:232,faceScale:2.3,wobble:0.7,still}),
+      moods:[['Calm','#FFC93C','idle',7],['Listening','#F8A4D2','listen',9],['Happy','#8FD9B0','happy',6],['Speaking','#8FD3FF','speak',8]].map(([label,color,mood,lobes])=>({label,el:React.createElement(Mascot,{color,mood,lobes,R:205,amp:0.1,faceY:232,faceScale:2.3,wobble:0.7,still})}))
+    };
+  }
+}
+</script>
+</body>
+</html>
