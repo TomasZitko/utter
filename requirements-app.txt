@@ -1,0 +1,10 @@
+# Only what the app needs (the notebook needs the full requirements.txt). Install torch first.
+transformers>=4.56
+numpy
+numba
+librosa
+soundfile
+fastapi
+uvicorn
+python-multipart
+pyarrow               # only for experiments/build_demo_pack.py (Real voices)

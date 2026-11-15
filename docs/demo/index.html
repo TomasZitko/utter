@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#181716">
+  <title>Utter: online demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  <link rel="stylesheet" href="tokens.css?v=10">
+  <link rel="stylesheet" href="app.css?v=10">
+</head>
+<body>
+
+<script>if (location.search.includes("embed")) document.documentElement.classList.add("embed");</script>
+<div class="demo-bar"><b>Online demo.</b> Nothing is recognised here and the microphone is not used:
+  the screens replay answers the real app gave on real recordings.
+  <a href="../#get">Get the real app</a> <a href="../">About the project</a></div>
+<style>
+  .demo-bar { position:fixed; top:0; left:0; right:0; height:46px; z-index:50; display:flex; align-items:center; justify-content:center; gap:10px;
+    padding:0 16px; background:var(--accent, #FFC93C); color:#141414; font:500 15px/1.2 "Instrument Sans", system-ui, sans-serif; text-align:center; }
+  .demo-bar b { font-weight:700; }
+  .demo-bar a { color:#141414; font-weight:700; white-space:nowrap; }
+  body { padding-top:46px; }
+  .embed .demo-bar { display:none; }  .embed body { padding-top:0; }   /* inside the phone frame on the project page */
+  @media (max-width: 820px) { .demo-bar { height:auto; min-height:46px; padding:6px 12px; font-size:13px; flex-wrap:wrap; position:static; } body { padding-top:0; } }
+</style>
+<div class="stage">
+  <aside class="story" aria-label="About and live test">
+    <div class="logo" id="logo"></div>
+    <p class="lead">A personal language for people whose speech changed after a stroke, Parkinson's, ALS or cerebral palsy. Record a sound three times, tell Utter what it means, and it speaks the full sentence for you. When it isn't sure, it asks again instead of guessing.</p>
+    <div class="facts" id="facts"></div>
+    <section class="lab" id="lab" aria-label="Real voices live test"></section>
+    <p class="foot">Utter app · Veritas AI Hackathon 2026. Tested on the TORGO database of dysarthric speech (Rudzicz, Namasivam &amp; Wolff, 2012). This page is a demo: it replays recorded answers of the real app, and a hum stands in for the voices.</p>
+  </aside>
+
+  <div class="device">
+    <div class="phone" id="phone">
+      <div id="view"></div>
+      <nav class="nav" id="nav" aria-label="Main"></nav>
+      <div id="toast-slot"></div>
+      <div class="statusbar"><span>9:41</span><span class="icons"><i class="ph-fill ph-cell-signal-full"></i><i class="ph-bold ph-wifi-high"></i><i class="ph-fill ph-battery-full" style="font-size:22px"></i></span></div>
+      <div class="notch"></div>
+      <div class="homebar"></div>
+    </div>
+  </div>
+
+  <aside class="engine" id="engine" aria-label="What the model is doing" aria-live="off"></aside>
+</div>
+<script src="brand.js?v=10"></script>
+<script src="recorder.js?v=10"></script>
+<script src="demo.js"></script>
+<script src="engine.js?v=10"></script>
+<script src="charts.js?v=10"></script>
+<script src="app.js?v=11"></script>
+<script src="lab.js?v=10"></script>
+<script>
+  // the demo bar takes 46 px of the window's height
+  function demoFit() {
+    const z = innerWidth <= 820 ? 1 : Math.max(0.5, Math.min(1, (innerHeight - 46) / 908, innerWidth / 1380));
+    document.documentElement.style.setProperty("--zoom", z.toFixed(3));
+  }
+  addEventListener("resize", demoFit); demoFit();
+</script>
+</body>
+</html>

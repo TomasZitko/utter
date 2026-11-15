@@ -1,7 +1,7 @@
 # Utter: voice control that learns *your* speech
 
 **Track:** Languages · **Team:** Jonáš, Tomáš and Benjamín
-Code, notebook and app: https://github.com/TomasZitko/utter
+Code, notebook and app: https://github.com/TomasZitko/utter · Video and click-through demo: https://tomaszitko.github.io/utter/
 
 ## The problem
 Dysarthria (slurred, slow or hard-to-understand speech) is common after a stroke and in Parkinson's, ALS and cerebral palsy ([sources](research.md)). Many of these people also have limited hand movement, so voice should be how they control a phone, smart home or wheelchair. But speech recognition is trained on typical speech: on the TORGO database, Whisper recognises single words from people with dysarthria only **42%** of the time (73% for speakers without dysarthria). Our user is one person with dysarthria who wants to be understood at home.

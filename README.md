@@ -2,7 +2,9 @@
 
 <p align="center">
 <a href="https://colab.research.google.com/github/TomasZitko/utter/blob/main/notebooks/utter.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open the analysis in Google Colab"></a>
-&nbsp;·&nbsp; <a href="https://tomaszitko.github.io/utter/"><b>Live project page</b></a>
+&nbsp;·&nbsp; <a href="https://tomaszitko.github.io/utter/demo/"><b>Click-through demo</b></a>
+&nbsp;·&nbsp; <a href="https://github.com/TomasZitko/utter/archive/refs/heads/main.zip"><b>Download the app</b></a>
+&nbsp;·&nbsp; <a href="https://tomaszitko.github.io/utter/">Project page</a>
 &nbsp;·&nbsp; <a href="docs/writeup.md"><b>One-page write-up</b></a>
 &nbsp;·&nbsp; <a href="notebooks/utter.ipynb">Notebook with outputs</a>
 &nbsp;·&nbsp; <a href="docs/research.md">Research and sources</a>
@@ -133,6 +135,7 @@ Utter's main model combines the person's own recordings with recordings of the s
 | DTW on the whole sequence of fingerprints, layers 3/6/9/12 | speakers without dysarthria | 69–72% (k=1), 80–82% (k=2); layer 12 best | **yes** |
 | DTW with per-recording mean subtraction (CMN) | 2 speakers without dysarthria (stopped early) | worse at every layer (e.g. FC02, layer 12, k=2: 77% vs 81%) | no |
 | Combine own + other people's recordings | speakers without dysarthria | 89–91% vs 72–86% own-only, 75–83% others-only | **yes** |
+| Whisper transcript of every taught recording, sharing one lock with WavLM | the app on a CPU | teaching hung on "Saving…" for 10–20 s per recording (found by a tester) | fixed: teaching runs WavLM only; one transcript per word is made later, when the app is idle |
 | Whisper text matching without homophones | – | Whisper scored only 64% on healthy speakers, mostly homophones (knew → "new") | fixed: homophones count as correct |
 
 Scripts: [`experiments/phase2_dtw.py`](experiments/phase2_dtw.py), [`experiments/phase2b_hybrid.py`](experiments/phase2b_hybrid.py), results in `experiments/*.csv`.
@@ -151,12 +154,29 @@ Scripts: [`experiments/phase2_dtw.py`](experiments/phase2_dtw.py), [`experiments
   ```
   Outputs go to `outputs/` (`results.json`, charts, example recordings), data and caches to `data/`.
 
-### The app
-Requires `outputs/results.json` from the notebook (it is in the repository).
+### The app, in one click (Windows)
+
+1. [Download the ZIP](https://github.com/TomasZitko/utter/archive/refs/heads/main.zip) and unpack it (right-click, *Extract all*).
+2. Double-click **`Start Utter.bat`**.
+3. The app opens in your browser. Allow the microphone, teach two words, say one.
+
+The first start installs everything into a `.venv` folder next to the app (nothing outside it) and downloads the two models, about 1.4 GB. It needs Python 3.10 to 3.12 ([python.org](https://www.python.org/downloads/), tick *Add python.exe to PATH*), an internet connection and about 5 GB of free disk. A graphics card is not needed: with an NVIDIA card the script installs PyTorch with GPU support, otherwise the app runs on the processor.
+
+**Mac or Linux:** `sh start_utter.sh` does the same.
+
+**By hand:**
 ```bash
-.venv\Scripts\python -m uvicorn app.server:app --port 8000
+python -m venv .venv
+.venv\Scriptsctivate                 # Mac/Linux: source .venv/bin/activate
+pip install torch                       # NVIDIA GPU: pip install torch --index-url https://download.pytorch.org/whl/cu126
+pip install -r requirements-app.txt
+python run.py                           # or: python -m uvicorn app.server:app --port 8000
 ```
-Open http://localhost:8000 and allow the microphone. Everything runs on your computer: the browser records 16 kHz WAV directly (no ffmpeg needed) and the server runs WavLM (and Whisper, to show what a regular assistant would hear). Taught words are saved in `data/app_state/`. Browsers allow the microphone only on `localhost` or HTTPS, so to try it on a phone, open it through an HTTPS tunnel or deploy it with HTTPS.
+On Windows a plain `pip install torch` gives the CPU build, which works; the line in the comment is the GPU build.
+
+Everything runs on your computer: the browser records 16 kHz WAV directly (no ffmpeg needed) and the server runs WavLM (and Whisper, to show what a regular assistant would hear). Taught words are saved in `data/app_state/`. Browsers allow the microphone only on `localhost` or HTTPS.
+
+**Just want to look?** The [click-through demo](https://tomaszitko.github.io/utter/demo/) is the same interface in your browser with no installation. It has no model: it replays answers the real app gave on TORGO recordings (recorded by [`experiments/record_demo_fixtures.py`](experiments/record_demo_fixtures.py)), and a hum stands in for the voices.
 
 **What is in the app**
 
@@ -199,7 +219,8 @@ app/static/                 frontend (plain HTML/CSS/JS): app.js (phone app), en
 design/                     app design
 experiments/                method comparison on speakers without dysarthria, app tests on TORGO and
                             in the browser, build_demo_pack.py (recordings for Real voices)
-docs/                       project page (GitHub Pages), write-up, research with sources, video script
+docs/                       project page and click-through demo (GitHub Pages), write-up, research, video script
+Start Utter.bat, run.py     one-click start on Windows (start_utter.sh on Mac/Linux)
 video/                      source of the launch video (Remotion); the finished video is docs/utter-launch-video.mp4
 ```
 

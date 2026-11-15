@@ -79,8 +79,13 @@ asr = None
 if USE_WHISPER:
     asr = (WhisperProcessor.from_pretrained(RESULTS["asr_model"]),
            WhisperForConditionalGeneration.from_pretrained(RESULTS["asr_model"]).to(DEVICE).eval())
-GPU_LOCK = threading.Lock()                   # WavLM and Whisper share one GPU
+EMB_LOCK = threading.Lock()                   # one recording at a time through WavLM
+# On a GPU, WavLM and Whisper share its small memory, so they take turns. On a CPU there is nothing
+# to protect, and recognition must never wait for a slow Whisper transcript.
+ASR_LOCK = EMB_LOCK if DEVICE == "cuda" else threading.Lock()
 whisper_pool = ThreadPoolExecutor(max_workers=1)
+IDLE_SECONDS = 2 if DEVICE == "cuda" else 12  # background transcripts wait until nobody has used the app this long
+BUSY = {"t": time.time()}                     # when a recording last went through the model
 
 
 # ---- Same preprocessing and distance as the notebook ----
@@ -97,7 +102,8 @@ def to_16k_trimmed(wav, sr):
 @torch.no_grad()
 def frames(wav):
     """Sequence of WavLM frames (frames x 768) from one layer, each scaled to unit length."""
-    with GPU_LOCK:
+    BUSY["t"] = time.time()
+    with EMB_LOCK:
         inp = fe(wav, sampling_rate=SR, return_tensors="pt").to(DEVICE)
         f = emb_model(**inp, output_hidden_states=True).hidden_states[LAYER][0].float().cpu().numpy()
     return f / (np.linalg.norm(f, axis=1, keepdims=True) + 1e-9)
@@ -181,7 +187,7 @@ def whisper_text(wav):
     if asr is None:
         return None
     proc, model = asr
-    with GPU_LOCK:
+    with ASR_LOCK:
         f = proc([wav], sampling_rate=SR, return_tensors="pt").input_features.to(DEVICE)
         ids = model.generate(f, language="en", task="transcribe", max_new_tokens=RESULTS["whisper_max_tokens"])
     return proc.batch_decode(ids, skip_special_tokens=True)[0].strip()
@@ -227,12 +233,29 @@ def words():
     return prof()["words"]
 
 
-def new_take(wav, when=None, with_whisper=True, source=None):
-    t = dict(id=uuid.uuid4().hex[:10], wav=wav, frames=frames(wav), whisper=None,
-             peaks=peaks(wav), when=when or time.time(), source=source)
-    if asr is not None and with_whisper:
-        whisper_pool.submit(lambda: t.__setitem__("whisper", whisper_text(wav)))
-    return t
+def new_take(wav, when=None, source=None):
+    """One stored recording. Only WavLM runs here, so teaching stays fast (see sound_later for Whisper)."""
+    return dict(id=uuid.uuid4().hex[:10], wav=wav, frames=frames(wav), whisper=None,
+                peaks=peaks(wav), when=when or time.time(), source=source)
+
+
+def sound_later(wid):
+    """What a regular assistant hears in a word, shown in My language. It is only for display, so one
+    recording per word is transcribed, in the background, and only once the app has been idle for a while."""
+    if asr is None:
+        return
+    me = PROFILES["me"]
+
+    def job():
+        while time.time() - BUSY["t"] < IDLE_SECONDS:
+            time.sleep(0.5)
+        w = me["words"].get(wid)
+        if not w or not w["takes"] or any(t["whisper"] for t in w["takes"]):
+            return
+        t = w["takes"][0]
+        t["whisper"] = whisper_text(t["wav"])
+
+    whisper_pool.submit(job)
 
 
 def save_state():
@@ -266,6 +289,7 @@ def load_state():
                 take["id"] = t["id"]
                 takes.append(take)
         me["words"][m["id"]] = dict({k: m[k] for k in WORD_KEYS}, takes=takes)
+        sound_later(m["id"])
     lp = STATE_DIR / "log.json"
     if lp.exists():
         me["log"] = json.loads(lp.read_text(encoding="utf-8"))
@@ -319,6 +343,20 @@ def add_log(entry):
 
 
 load_state()
+
+
+def warm_up():
+    """Run the whole path once on silence, so the first real recording is not the slow one."""
+    t0 = time.perf_counter()
+    noise = (np.random.default_rng(0).standard_normal(44100) * 0.01).astype(np.float32)
+    f = frames(to_16k_trimmed(noise, 44100))        # resampling and trimming also compile on first use
+    peaks(noise)
+    dist(f, f)
+    alignment(f, f)
+    print(f"[utter] warm-up {time.perf_counter() - t0:.1f} s, ready")
+
+
+warm_up()
 app = FastAPI(title="Utter")
 
 
@@ -390,6 +428,8 @@ def add_take(wid: str, file: UploadFile = File(...)):
     with LOCK:
         words()[wid]["takes"].append(take)
         save_state()
+        if ACTIVE == "me":
+            sound_later(wid)
         return word_json(wid)
 
 
@@ -587,7 +627,7 @@ def sim_start(speaker: str = Form(...), seed: int = Form(None)):
         tk = []
         for c in clips[:takes]:
             wav, sr = sf.read(SIM_DIR / c["file"], dtype="float32")
-            tk.append(new_take(to_16k_trimmed(wav, sr)[: MAX_SECONDS * SR], with_whisper=False, source=c["id"]))
+            tk.append(new_take(to_16k_trimmed(wav, sr)[: MAX_SECONDS * SR], source=c["id"]))
         wd[uuid.uuid4().hex[:8]] = dict(label=label, phrase=label.capitalize() + ".", icon="waveform", main=main, pale=pale, takes=tk)
         tests += [dict(clip=c["id"], label=label) for c in clips[takes:]]
     rng.shuffle(tests)

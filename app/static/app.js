@@ -62,7 +62,7 @@ const CS = {
   "Forget this word": "Zapomenout slovo", "Edit": "Upravit", "Your sound": "Tvůj zvuk", "Yesterday": "Včera",
   "Step 1 of 2": "Krok 1 ze 2", "What should this sound mean?": "Co má ten zvuk znamenat?", "Pick a meaning to continue": "Vyber význam",
   "your way": "po svém", "Tap once. No need to hold.": "Stačí jednou klepnout. Nemusíš držet.", "Listening… it stops by itself.": "Poslouchám… zastaví se to samo.",
-  "Saving…": "Ukládám…", "Recording": "Nahrávám", "part of your language": "součástí tvého jazyka",
+  "Saving…": "Ukládám…", "Learning your sound…": "Učím se tvůj zvuk…", "Recording": "Nahrávám", "part of your language": "součástí tvého jazyka",
   "Try it now": "Vyzkoušet", "Teach another word": "Naučit další slovo", "See my language": "Zobrazit můj jazyk", "Or type your own": "Nebo napiš vlastní",
   "things said today": "řečeno dnes", "of them by voice": "z toho hlasem", "words in the language": "slov v jazyce",
   "Nothing said yet. Sentences appear here with the time, and one tap says them again.": "Zatím nic. Věty se tu objeví i s časem a jedním klepnutím je řekneš znovu.",
@@ -455,7 +455,7 @@ const SCREENS = {
         ${waveHTML(0.62, 64)}
         <button class="rec ${t.recording ? "on" : ""}" data-act="record" aria-label="${t.recording ? "Stop recording" : "Start recording"}" style="--ring:${t.recording ? "var(--danger)" : "rgba(243,235,221,.3)"}">
           <i class="ph-fill ph-${t.recording ? "stop" : "microphone"}"></i></button>
-        <span class="sub c" style="font-size:16px">${t.recording ? "Listening… it stops by itself." : t.busy ? "Saving…" : "Tap once. No need to hold."}</span>
+        <span class="sub c" style="font-size:16px">${t.recording ? "Listening… it stops by itself." : t.busy ? "Learning your sound…" : "Tap once. No need to hold."}</span>
       </div>`;
   },
 
@@ -682,7 +682,12 @@ function render() {
     if (h) { h.tabIndex = -1; h.focus({ preventScroll: true }); }
   }
   const custom = $("#custom");
-  if (custom) custom.addEventListener("input", (e) => { S.teach.custom = e.target.value; $("#teach-continue").innerHTML = teachContinueHTML(); });
+  if (custom) custom.addEventListener("input", (e) => {
+    S.teach.custom = e.target.value;
+    if (e.target.value.trim()) S.teach.sel = null;      // your own word replaces the picked tile
+    document.querySelectorAll(".meaning").forEach((b, i) => b.setAttribute("aria-checked", String(S.teach.sel === i)));
+    $("#teach-continue").innerHTML = teachContinueHTML();
+  });
   const bind = (id, ev, fn) => { const el = $(id); if (el) el.addEventListener(ev, fn); };
   bind("#set-name", "change", (e) => { P.name = e.target.value.trim(); savePrefs(); if (S.screen === "profile") render(); });
   bind("#set-name", "input", (e) => { P.name = e.target.value.trim(); savePrefs(); });
@@ -808,11 +813,21 @@ const ACT = {
     try {
       const w = await api("/api/words", { method: "POST", body: form({ label: m.label, phrase: m.phrase, icon: m.icon, main: m.main, pale: m.pale }) });
       S.words = S.words.some((x) => x.id === w.id) ? S.words.map((x) => (x.id === w.id ? w : x)) : [...S.words, w];
-      Object.assign(S.teach, { wordId: w.id, addTo: w.id, count: 0 });
+      Object.assign(S.teach, { wordId: w.id, addTo: w.id, count: 0, fresh: w.takes === 0 });
       go("teach2");
     } catch (e) { toast(e.message, "warning"); }
   },
-  teachBack() { stopRecording(true); S.teach.recording = false; S.teach.addTo && S.teach.count === 0 && S.detailId === S.teach.addTo ? go("detail") : go("teach1"); },
+  async teachBack() {
+    const t = S.teach;
+    stopRecording(true); t.recording = false;
+    if (t.addTo && t.count === 0 && S.detailId === t.addTo && !t.fresh) return go("detail");
+    // going back from a word that was only just named: do not leave an empty word behind
+    if (t.fresh && t.count === 0 && t.wordId) {
+      try { await api(`/api/words/${t.wordId}/archive`, { method: "POST" }); await loadWords(); } catch (e) { /* stays as an empty word */ }
+    }
+    Object.assign(t, { wordId: null, addTo: null, fresh: false });   // back on the first step, any meaning can be picked again
+    go("teach1");
+  },
   async record() {
     const t = S.teach;
     if (t.busy) return;
