@@ -29,7 +29,7 @@ Tested on real recordings of **7 people with dysarthria** from the TORGO databas
 
 ![Accuracy for each person with dysarthria](outputs/1_per_speaker.png)
 
-More charts: [how many recordings are enough](outputs/2_recordings_needed.png), [the "not sure" state](outputs/3_not_sure.png). All numbers come from [`outputs/results.json`](outputs/results.json), written by the notebook.
+More charts: [how many recordings are enough](outputs/2_recordings_needed.png), [the "not sure" state](outputs/3_not_sure.png). All numbers come from [`outputs/results.json`](outputs/results.json), written by the notebook. A fresh *Run all* in Google Colab (15 Nov 2026) reproduced every number in it exactly.
 
 **Honest note.** For common English words, other people's recordings already help a lot (79%), more than 2 of the person's own (74%). Combining the two is best. Personal recordings matter where other people's fail. For F01, the speaker Whisper understood least (8%; F01 is only in the 1-recording test, see the notebook), one own recording per word beat other people's recordings (73% vs. 55%). They also matter where nobody else's recordings exist: sounds a person invents for themselves, like "wah-uh" for *water*. In that personal-only mode with "not sure" on, Utter acts correctly 54% of the time, asks again 41% of the time, and is wrong 5% of the time.
 
